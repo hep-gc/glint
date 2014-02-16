@@ -1,0 +1,65 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{% static 'vm_dist/css/basestyle.css' %}" />
+    <title>{% block title %}UVic HEP's Image Distribution Service{% endblock %}</title>
+    {% block scripts %} 
+    
+    {% endblock %}
+</head>
+
+<body onload="init()">
+        <table class="tableheader"><tr><td>
+	    <div class="header1"> {% block titlebar %}  {% endblock %} </div>
+	    </td><td>
+	    <div class="header2">   {% block titleuser %} {% endblock %}  </div>
+	    </td></table>
+	    
+	    <table class="tablemain" border="3px"><tr><td>
+	    <div class="nav1" width="100%">
+	        {% block sidebar %}
+	        <ul>
+	            <li><a href="/image_dist/imagedistribution/">Home</a></li>
+	            <li><a href="/admin/">Admin</a></li>
+	            <li><a href="/admin/image_dist/image_info/">Your Images</a></li>
+	            <li><a href="/admin/image_dist/site_info/">Your Sites</a></li>
+	            <li><a href="/admin/image_dist/user_site_env_setup_script/">Your Scripts</a></li>
+	        </ul>
+	        {% endblock %}
+	    </div>
+	    
+	    </td><td valign="top" width="88%">
+	    
+	    
+	        <table class="tablecontent" border="1px"><tr><td align="top">
+		        <div class="mainarea">
+		        {% block content %}{% endblock %}
+		        </div>
+	        </td></tr>
+	        <tr><td>
+			    <div class="mainarea">
+			        {% block updateinfo %}{% endblock %} 
+			    </div>
+	        </td></tr>
+	        <tr><td>
+			    <div class="mainarea">
+			        {% block updateevent %}{% endblock %} 
+			    </div>
+	        </td></tr>
+	        <tr><td>
+			    <div class="mainarea">
+			        {% block include %}{% endblock %} 
+			    </div>
+	        </td></tr></table>
+	    
+	
+	    </td>
+	    
+	    </tr></table>
+	    <table class="tablefooter"><tr><td class="tdfooter">
+	    <center><div class="divfooter"> {% block splashbar %}  {% endblock %} </div></center>
+	    </td></tr></table>
+	  
+</body>
+</html>

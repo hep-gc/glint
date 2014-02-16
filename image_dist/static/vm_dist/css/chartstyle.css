@@ -1,0 +1,10 @@
+.chart div {
+  font: 10px sans-serif;
+  background-color: steelblue;
+  text-align: right;
+  padding: 3px;
+  margin: 1px;
+  color: white;
+}
+
+.tablemanage {margin:0px;width:100%;;box-shadow: 4px 4px 2px #cccccc}

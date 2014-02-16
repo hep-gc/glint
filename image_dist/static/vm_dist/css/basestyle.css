@@ -1,0 +1,15 @@
+html,body {height: 100%;margin: 0px;padding: 0px}
+.tableheader {margin:0px;width:100%;background-color:#eeeeee}
+.header1 {background-color:#eeeeee; float:left;box-shadow: 4px 4px 2px #cccccc;}
+.header2 {background-color:#eeeeee; float:right;box-shadow: 4px 4px 2px #cccccc;}
+
+.tablemain {height:100%;margin:0px;width:100%;}
+.tablecontent {margin:0px;width:100%;}
+.nav1 {height:100%;float:left;background-color:#dddddd;box-shadow: 4px 4px 2px #cccccc;width:100%}
+.mainarea {float:top_left;background-color:#eeeeee;box-shadow: 4px 4px 2px #cccccc;width:100%;border:2px solid;}
+
+.tablefooter{float:center;width:100%;background-color:#dddddd ;box-shadow: 4px 4px 2px #cccccc;font-size:10px}
+
+.divfooter{float:center;background-color:#dddddd ;box-shadow: 4px 4px 2px #cccccc;font-size:10px}
+
+

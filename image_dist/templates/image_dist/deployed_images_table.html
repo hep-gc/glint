@@ -1,0 +1,96 @@
+{% extends "image_dist/base.html" %}
+{% load staticfiles %}
+
+{% block scripts %}
+<script type="text/javascript" src="{% static 'vm_dist/js/image_dist.js' %}"></script>
+<script type="text/javascript" src="{% static 'vm_dist/js/utils.js' %}"></script>
+<script type="text/javascript" src="{% static 'vm_dist/js/vm_dist_api.js' %}"></script>
+<script>
+
+var img_list={
+{% for img_key, site_list in site_image_array %}
+    '{{img_key}}':[
+    {% for site in site_list %}
+    '{{site}}',
+	{% endfor %}
+	],
+{% endfor %}
+}
+
+var DATA = {'deployments':img_list}
+var OPSURL ={'save':'/image_dist/jsonrequestpost/'}
+
+
+function clear_Options(sel){
+	while(sel.options.length>0)
+		sel.remove(0);
+}
+
+function pot_sites(){
+	console.log("potential site info")
+ 	document.getElementById("sup_site_info").innerHTML="...";
+ 	//console.log("csrf-token"+csrf_token)
+}
+
+
+function deployed_update_site(){
+	console.log("update site info")
+ 	document.getElementById("dep_site_info").innerHTML="...";
+}
+
+function deployed_update_image()
+{
+    console.log("site change sel");
+	sites=img_list[document.getElementById("dist_img_sel").value];
+	console.log(sites);
+	clear_Options(document.getElementById("dist_site_sel"));
+	for (s in sites){
+		option = document.createElement("option");
+		option.text = sites[s];
+		option.value = sites[s];
+		document.getElementById("dist_site_sel").appendChild(option);
+	}
+	document.getElementById("dep_img_info").innerHTML="...";
+	
+}
+</script>
+{% endblock %}
+
+{% block titlebar %} Image Distribution Management {% endblock %}
+{% block titleuser %} un: {{user_id}} {% endblock %}
+{% block content %}
+<table><tr><td>Images</td><td>Deployed Sites</td><td></td><td>User's Sites</td></tr>
+<tr><td>
+<select id="dist_img_sel" size="3" onchange="deployed_update_image()">
+{% for img_key, site_list in site_image_array  %}
+   <option value="{{img_key}}">{{img_key}}</option>
+{% endfor %}
+</select>
+</td><td>
+<select id="dist_site_sel" size="3" onclick="deployed_update_site()">
+</select>
+</td>
+<td>
+<input type='button' value="< add site" onclick="dist_vm()"><br>
+<input type='button' value=" rem site >" onclick="rem_vm()">
+<input type='button' value="save" onclick="api.request('save','deployments')">
+{%csrf_token%}
+</td>
+<td>
+<select id="pot_dist_sites" size="3" onchange="pot_sites()" >
+{% for site in site_set  %}
+   <option value="{{site.site_name}}">{{site.site_name}}</option>
+{% endfor %}
+</select>
+</td>
+</tr>
+
+<tr><td>Image Info:</td><td>Site Info:</td><td></td><td>Site Info:</td></tr>
+<tr><td><div id="dep_img_info"></div></td><td><div id="dep_site_info"></div></td>
+<td></td><td><div id="sup_site_info"></div>
+</tr>
+</table>
+
+{% endblock %}
+{% block splashbar %}<table><tr><td>Managed by the University of Victoria</td></tr><tr><td> High Energy Particle Physics Computing Group</td></tr></table>{% endblock %}
+

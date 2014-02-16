@@ -1,0 +1,31 @@
+Cloud Sites for {{user_id}}<br>
+<select id="sites_imgsel" size="3" onchange="sites_dothis()">
+{% for site in site_data  %}
+   <option value="{{site.site_name}}">{{site.site_name}}</option>
+{% endfor%}
+</select>
+<br>
+<table>
+<tr><td>Site URL:</td><td> <div id='site_url'></div></td></tr>
+<tr><td>Site TYPE:</td><td> <div id='site_type'></div></td></tr>
+</table>
+
+<script>
+var site_list=[
+{% for site in site_data  %}
+  '{{site.site_url}}',
+{% endfor%}
+]
+var site_list_type=[
+{% for site in site_data  %}
+  '{{site.site_type}}',
+{% endfor%}
+]
+
+function sites_dothis()
+{
+    console.log("site change sel");
+	document.getElementById('site_url').innerHTML=site_list[document.getElementById("sites_imgsel").selectedIndex]
+	document.getElementById('site_type').innerHTML=site_list_type[document.getElementById("sites_imgsel").selectedIndex]
+}
+</script>

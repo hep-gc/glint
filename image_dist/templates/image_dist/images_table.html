@@ -1,0 +1,21 @@
+Images for {{user_id}}<br>
+<select id="imgsel" size="3" onchange="dothis()">
+{% for img in image_data  %}
+   <option value="{{img.image_name}}">{{img.image_name}}</option>
+{% endfor%}
+</select>
+<br>
+<table><tr><td>Image Type:</td><td> <div id='image_type'></div></td></tr></table>
+
+<script>
+var list=[
+{% for img in image_data  %}
+  '{{img.image_type}}',
+{% endfor%}
+]
+
+function dothis()
+{
+	document.getElementById('image_type').innerHTML=list[document.getElementById("imgsel").selectedIndex]
+}
+</script>
