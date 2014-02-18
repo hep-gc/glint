@@ -5,12 +5,6 @@ import keystoneclient.v2_0.client as ksclient
 import glanceclient
 from pprint import pprint
 
-"""
-getting authorization tokens
-"""
-
-
-
 def distribute_image(image, site, file_loc, password):
     """
     Takes image file and site RC file that the user specified and extracts

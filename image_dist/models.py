@@ -5,6 +5,26 @@ from image_dist.tools import file_uploader,file_uploader_script
 from django.utils.translation import ugettext_lazy as _
 from pprint import pprint
 
+class task_info(models.Model):
+    user_name = models.ForeignKey('auth.User')
+    hash_index = models.IntegerField()
+    task_name = models.CharField(max_length=200)
+    parent_task = models.IntegerField(null=True,blank=True)
+    percent_complete = models.IntegerField()
+    
+    INPROGRESS,COMPLETE = 'Inprogress','Complete'
+    STATUS = ( (INPROGRESS,_(INPROGRESS)),(COMPLETE,_(COMPLETE)) )
+    
+    status = models.CharField(max_length=200,choices=STATUS,default=INPROGRESS)
+    
+    start_time = models.DateTimeField()
+    stop_time = models.DateTimeField()
+    
+    GLANCE_ADD_TASK,GLANCE_REM_TASK,GLANCE_GET_IMG_TASK = 'Add Image','Remove Image','List Images'
+    TASK_TYPE = ( (GLANCE_ADD_TASK,_(GLANCE_ADD_TASK)),(GLANCE_REM_TASK,_(GLANCE_REM_TASK)),(GLANCE_GET_IMG_TASK,_(GLANCE_GET_IMG_TASK)) )
+    
+    task_type = models.CharField(max_length=200,choices=TASK_TYPE,default=GLANCE_ADD_TASK)
+    
 # Image Distribution Models
 class user_messages(models.Model):
     user_name = models.ForeignKey('auth.User')

@@ -43,14 +43,14 @@ function clear_Options(sel){
 
 function pot_sites(){
 	console.log("potential site info")
- 	document.getElementById("sup_site_info").innerHTML="...";
+ 	//document.getElementById("sup_site_info").innerHTML="...";
  	//console.log("csrf-token"+csrf_token)
 }
 
 
 function deployed_update_site(){
 	console.log("update site info")
- 	document.getElementById("dep_site_info").innerHTML="...";
+ 	//document.getElementById("dep_site_info").innerHTML="...";
 }
 
 function deployed_update_image()
@@ -65,25 +65,81 @@ function deployed_update_image()
 		option.value = JSON.stringify(sites[s]);
 		document.getElementById("dist_site_sel").appendChild(option);
 	}
-	document.getElementById("dep_img_info").innerHTML="...";
+	//document.getElementById("dep_img_info").innerHTML="...";
 	
 }
 
 function dist_image(){
 	img_name = document.getElementById("dist_img_sel").value;
     json_site = document.getElementById("pot_dist_sites").value;
+    console.log("site json "+ json_site);
     site_name = JSON.parse(json_site).site;
+    script_name = JSON.parse(json_site).script;
     console.log("add "+site_name+" to "+img_name);
     if(img_name == null || site_name == null){
     	alert("you must select and image and a user site");
     }else{
-    	
+    	//add site 
+    	if (img_name in img_list){
+    		console.log(img_name+" exists now check if site exists");	
+    		img_sites = img_list[img_name];
+    		console.log("look in "+JSON.stringify(img_sites))
+    		console.log("looking for "+site_name+" "+script_name);
+    		for(idx in img_sites){
+    			site_info = img_sites[idx];
+    		    console.log("checking stie "+JSON.stringify(site_info) );
+    			if(site_info.site_name == site_name && site_info.site_script == script_name){
+    				console.log("found site"+site_name+" "+script_name);
+    				return;
+    			}
+    		}
+    		//guess site is not added yet, so add it now
+    		new_obj = {}
+    		new_obj.site_name = site_name
+    		new_obj.site_script = script_name
+    		img_sites.push(new_obj)
+    		console.log("look at new list "+JSON.stringify(img_sites))
+    		deployed_update_image()
+    	}else{
+    		site_sel = document.getElementById("dist_site_sel");
+    		new_opt = document.createElement("option");
+    		new_opt.value=site_name;
+    		site_sel.appendChild(new_opt);
+    		console.log("added "+site_name+" to "+img_name);
+    	}
     }
 }
 
 function rem_image(){
 	img_name = document.getElementById("dist_img_sel").value;
-    site_name = document.getElementById("dist_site_sel").value;
+    json_site = document.getElementById("dist_site_sel").value;
+    console.log("img anme "+img_name+" site anme "+json_site);
+    
+    site_name = JSON.parse(json_site).site_name;
+    script_name = JSON.parse(json_site).site_script;
+    console.log("add "+site_name+" to "+img_name+" script "+script_name);
+    
+    if(img_name == null || site_name == null){
+    	alert("you must select and image and a user site");
+    }else{
+    	//remove site 
+    	if (img_name in img_list){
+    		console.log(img_name+" exists now check if site exists");	
+    		img_sites = img_list[img_name];
+    		console.log("look in "+JSON.stringify(img_sites))
+    		console.log("looking for "+site_name+" "+script_name);
+    		for(idx in img_sites){
+    			site_info = img_sites[idx];
+    		    console.log("checking stie "+JSON.stringify(site_info) );
+    			if(site_info.site_name == site_name && site_info.site_script == script_name){
+    				console.log("found site"+site_name+" "+script_name);
+    				img_sites.splice(idx,1);
+    			}
+    		}
+    		
+    		deployed_update_image()
+    	}
+    }
 }
 </script>
 {% endblock %}
