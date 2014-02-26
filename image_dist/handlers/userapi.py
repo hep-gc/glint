@@ -21,6 +21,7 @@ def handle_request(request):
     jsonMsg = request.POST['jsonMsg']
     #pprint(jsonMsg)
     json_req = json.loads(jsonMsg)
+    ret_msg="done";
     if json_req['op'] == 'save':
         tasks=[]
         img_deployments = json_req['deployments']
@@ -46,9 +47,9 @@ def handle_request(request):
                     pprint("now start thread")
                     #t.start()
                     pprint("successfully submitted image to site")
-                    
-                else:
-                    pprint("Entry already exists in db")
+                    site['site_status']="deployed"
+                #else:
+                #    pprint("Entry already exists in db")
         
         deployed_sites = request.user.deployed_images_set.all()
         for t in tasks:
@@ -73,6 +74,7 @@ def handle_request(request):
                     #pprint("looking for %s %s"%(dep_site_name,dep_site_cfg))
                     if site_name == dep_site_name and site_script_name==dep_site_cfg:
                         found = True
+                        
                         #pprint("found %s , %s for image %s "%(site_name,site_script_name,image_name))
                 
                 if not found:
@@ -80,10 +82,12 @@ def handle_request(request):
                     #create a remove task
                     rem_image(request,image_name,site_name,site_script_name)
                     
+        
+        ret_msg=json.dumps(img_deployments)
                                                    
                     
             
-    return HttpResponse("Got Json Message %s" %jsonMsg)
+    return HttpResponse("%s" %ret_msg )
 
 
 

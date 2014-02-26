@@ -14,7 +14,7 @@ function ImageServiceAPI(){
   //this.messageHandler = new JSONMessageHandler();
   
   this.request=function(op){
-    console.log("send json to backend "+op+" data structure ");
+    //console.log("send json to backend "+op+" data structure ");
     
     jsonMessage = this.messageFactory.createRequestMessage(op,OPSDATA[op]);
     messageHandler = new JSONMessageHandler();
@@ -36,16 +36,17 @@ function JSONMessageFactory(){
 
 function JSONMessageHandler(){
   httpReq={};
+  httpUtils = new HTTPUtils();
   operation='';
   
   this.request=function(jsonMessage,op){
     opurl = OPSURL[op];
-    console.log("create request to backend with json data Model at url "+jsonMessage+" "+opurl);
-    httpUtils = new HTTPUtils();
+    //console.log("create request to backend with json data Model at url "+jsonMessage+" "+opurl);
+    
     httpReq = httpUtils.CreateHttpObject();
     operation=op;
     //this.httpReq=httpReq;  
-    console.log("POST JSON Request");
+    //console.log("POST JSON Request");
     httpUtils.sendViaPOST(httpReq,opurl,jsonMessage,this.callback);
   };
   
@@ -53,12 +54,13 @@ function JSONMessageHandler(){
     //data.srcElement;
     if(httpReq.readyState==4){
 		var objtabdata=httpReq.responseText;
-		console.log("post done "+objtabdata);
+		//console.log("post done "+objtabdata);
 		//support for each message type here or use classes
-		console.log("op is or "+operation);
+		//console.log("op is or "+operation);
 		view_id=OPSVIEW[operation];
-		console.log("div id "+view_id.div);
-		document.getElementById(view_id.div).innerHTML=objtabdata;
+		//console.log("div id "+view_id.div);
+		document.getElementById(view_id.div).innerHTML="'"+operation+ "' Operation Completed";
+		OPS_CB[operation](objtabdata);
 	}
     
   }

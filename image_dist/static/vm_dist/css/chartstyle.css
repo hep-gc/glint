@@ -1,10 +1,54 @@
 .chart div {
   font: 10px sans-serif;
   background-color: steelblue;
-  text-align: right;
-  padding: 3px;
-  margin: 1px;
+  text-align: left;
+  horizontal-align:center;
+  float: left;
+  padding: 5px;
+  margin: 5px;
   color: white;
+  width: 98%;
+}
+
+div.main_entry {
+  
+  horizontal-align:center;
+  text-align: left;
+}
+
+div.entries {
+ 
+ float: left;
+ background-color: lightblue;
+ horizontal-align:center;
+ 
+}
+p.title {
+ float: left;
+ padding: 3px;
+ margin: 1px;
+ background-color: darkblue;
+}
+
+p.non_entries {
+ float: left;
+ padding: 3px;
+ margin: 1px;
+ background-color: grey;
+}
+
+p.entries_pend {
+ float: left;
+ padding: 3px;
+ margin: 1px;
+ background-color: lightgreen;
+}
+
+p.entries {
+ float: left;
+ padding: 3px;
+ margin: 1px;
+ background-color: green;
 }
 
 .tablemanage {margin:0px;width:100%;;box-shadow: 4px 4px 2px #cccccc}
