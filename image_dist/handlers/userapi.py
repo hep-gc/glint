@@ -107,13 +107,13 @@ def rem_image(request,img_name,site2_name,site2_script):
 
 def add_image(request,img_name,site2_name,site2_script):
     img_src_line = request.user.image_info_set.get(image_name=img_name)
-    pprint(img_src_line.image_src_location)
+    pprint("%s %s"%(img_src_line.image_src_location,img_src_line.image_type))
     site_dest_line = request.user.site_info_set.get(site_name=site2_name)
     pprint(site_dest_line.site_url)
     cfg_file = request.user.user_site_env_setup_script_set.get(site=site_dest_line.pk,user_site_script=site2_script)
     
     pprint(cfg_file)
-    image_info = image_dist.openstack_utils.distribute_image(img_src_line.image_src_location, site_dest_line.site_url, cfg_file.user_site_script,cfg_file.pw)
+    image_info = image_dist.openstack_utils.distribute_image(img_src_line.image_src_location, site_dest_line.site_url, cfg_file.user_site_script,cfg_file.pw,img_src_line.image_type)
     
     request.user.deployed_images_set.create(user=request.user.pk,image=img_src_line,site=site_dest_line,site_script=cfg_file,imageid=image_info.id)
     
