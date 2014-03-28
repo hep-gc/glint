@@ -95,7 +95,8 @@ def handle_request(request):
 def rem_image(request,img_name,site2_name,site2_script):
     img_src_line = request.user.image_info_set.get(image_name=img_name)
     pprint(img_src_line.image_src_location)
-    site_dest_line = request.user.site_info_set.get(site_name=site2_name)
+    #site_dest_line = request.user.site_info_set.get(site_name=site2_name)
+    site_dest_line = site_info.objects.get(site_name=site2_name)
     pprint(site_dest_line.site_url)
     cfg_file = request.user.user_site_env_setup_script_set.get(site=site_dest_line.pk,user_site_script=site2_script)
     
@@ -137,7 +138,8 @@ def add_image_to_site(request):
     
     img_src_line = request.user.image_info_set.get(image_name=img_name)
     pprint(img_src_line.image_src_location)
-    site_dest_line = request.user.site_info_set.get(site_name=site2_name)
+    #site_dest_line = request.user.site_info_set.get(site_name=site2_name)
+    site_dest_line = site_info.objects.get(site_name=site2_name)
     pprint(site_dest_line.site_url)
     cfg_file = request.user.user_site_env_setup_script_set.get(site=site_dest_line.pk,user_site_script=site2_script)
     
@@ -165,7 +167,8 @@ def remove_image_from_site(request):
     pprint("in:%s sn:%s" %(img_name,site2_name))
     img_src_line = request.user.image_info_set.get(image_name=img_name)
     pprint(img_src_line.image_src_location)
-    site_dest_line = request.user.site_info_set.get(site_name=site2_name)
+    #site_dest_line = request.user.site_info_set.get(site_name=site2_name)
+    site_dest_line = site_info.objects.get(site_name=site2_name)
     pprint(site_dest_line.site_url)
     cfg_file = request.user.user_site_env_setup_script_set.get(site=site_dest_line.pk,user_site_script=site2_script)
     
