@@ -13,7 +13,7 @@ import json,threading
 import image_dist.openstack_utils
 
 from django.views.decorators.csrf import csrf_exempt
-
+from image_dist.models import site_info
 
 @login_required
 @csrf_exempt
@@ -35,8 +35,9 @@ def handle_request(request):
                 
                 img_src_line = request.user.image_info_set.get(image_name=key)
     
-                site_dest_line = request.user.site_info_set.get(site_name=site_name)
-    
+                #site_dest_line = request.user.site_info_set.get(site_name=site_name)
+                site_dest_line = site_info.objects.get(site_name=site_name)
+                
                 cfg_file = request.user.user_site_env_setup_script_set.get(site=site_dest_line.pk,user_site_script=site_cfg)
                 
                 if request.user.deployed_images_set.filter(image=img_src_line,site=site_dest_line,site_script=cfg_file).count() == 0:
@@ -108,7 +109,8 @@ def rem_image(request,img_name,site2_name,site2_script):
 def add_image(request,img_name,site2_name,site2_script):
     img_src_line = request.user.image_info_set.get(image_name=img_name)
     pprint("%s %s"%(img_src_line.image_src_location,img_src_line.image_type))
-    site_dest_line = request.user.site_info_set.get(site_name=site2_name)
+    #site_dest_line = request.user.site_info_set.get(site_name=site2_name)
+    site_dest_line = site_info.objects.get(site_name=site2_name)
     pprint(site_dest_line.site_url)
     cfg_file = request.user.user_site_env_setup_script_set.get(site=site_dest_line.pk,user_site_script=site2_script)
     
