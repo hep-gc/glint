@@ -5,7 +5,7 @@ Glint is a cloud image distribution service built using the the django framework
 
 Glint uses openstack's Glance Image management api to aggregate distributed openstack clouds. Glint offers two main services. The site management and user credential service and the image distribution service.
 
-The site management and user credential service allows users to identify other openstack sites. It also allows users to store their credentialis for there sites that Glint uses to login and modify that sites glance repository.
+The site management and user credential service allows users to identify other openstack sites. It also allows users to store their credentialis for sites that Glint uses to login and modify that sites glance repository.
 
 The image distribution service uses glance to identify all images accross all sites and creats a simple table for the user to easily select which images they want on selected sites.
 
