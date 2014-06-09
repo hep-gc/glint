@@ -1,4 +1,4 @@
-# Django settings for VMDist project.
+# Django settings for glintservice project.
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG
@@ -12,7 +12,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': '/home/rd/workspace/VMDist/sqlite.db',                      # Or path to database file if using sqlite3.
+        'NAME': '/home/rd/workspace/glintservice/sqlite.db',                      # Or path to database file if using sqlite3.
         # The following settings are not used with sqlite3:
         'USER': '',
         'PASSWORD': '',
@@ -83,7 +83,7 @@ STATICFILES_FINDERS = (
 )
 
 # Make this unique, and don't share it with anybody.
-SECRET_KEY = '&^_#pjlg(j#x-v4zwn)gdxj_fntgh&-+x2*a%)+8^&3t=0p74#'
+SECRET_KEY = 'b13df^t@)=+t$rpuk5x(g3dq(j*@sak$0m8h6eihs)5r2_dj14'
 
 # List of callables that know how to import templates from various sources.
 TEMPLATE_LOADERS = (
@@ -98,21 +98,19 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'VMDist.urls'
+ROOT_URLCONF = 'glintservice.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
-WSGI_APPLICATION = 'VMDist.wsgi.application'
+WSGI_APPLICATION = 'glintservice.wsgi.application'
 
 TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    "/home/rd/workspace/VMDist/image_dist/templates"
 )
 
 INSTALLED_APPS = (
@@ -124,9 +122,9 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     # Uncomment the next line to enable the admin:
     'django.contrib.admin',
+    'imagedist',
     # Uncomment the next line to enable admin documentation:
     # 'django.contrib.admindocs',
-    'image_dist',
 )
 
 # A sample logging configuration. The only tangible logging
