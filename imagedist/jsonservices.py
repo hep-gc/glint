@@ -14,8 +14,14 @@ _auth_url='http://rat01.heprc.uvic.ca:5000/v2.0'
 _glance_url='http://rat01.heprc.uvic.ca:5000/v2.0'
 _root_site = 'Rat01'
 
+def savi_fix(keystone,glance_ep):
+    if 'iam.savitestbed.ca' in keystone.auth_url:
+        return glance_ep.replace('/v1','')
+    return glance_ep    
+
 def _get_images(keystone):
     glance_ep = keystone.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
+    glance_ep = savi_fix(keystone,glance_ep)
     glance = glanceclient.Client('1',glance_ep,token=keystone.auth_token)
     images = glance.images.list()
     return images
@@ -137,6 +143,7 @@ class imageremovehandler():
                 keystone_src = ksclient.Client(auth_url="%s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
             print "now create service ep"
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
+            glance_ep_src = savi_fix(keystone_src,glance_ep_src)
             glance_src = glanceclient.Client('1',glance_ep_src,token=keystone_src.auth_token)
             print "now list images"
             images = glance_src.images.list()
@@ -213,7 +220,7 @@ class imagecopyhandler():
                 keystone_src = ksclient.Client(auth_url="%s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
             
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
-            
+            glance_ep_src = savi_fix(keystone_src,glance_ep_src) 
             glance_src = glanceclient.Client('1',glance_ep_src,token=keystone_src.auth_token)
             
             images = glance_src.images.list()
@@ -249,6 +256,7 @@ class imagecopyhandler():
                 keystone_dest = ksclient.Client(auth_url="%s:%s/v2.0"%(remote_site_name[0].url,remote_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
                 
             glance_ep_dest = keystone_dest.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
+            glance_ep_dest = savi_fix(keystone_dest,glance_ep_dest)
             glance_dest = glanceclient.Client('1',glance_ep_dest,token=keystone_dest.auth_token)
             
             file_loc='%s%s'%(directory,self.img_name)
