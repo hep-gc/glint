@@ -1,0 +1,8 @@
+---
+:backends:
+  - gpg
+:gpg:
+  :datadir: /home/crlb/Git/glint/glint_backup/example/hieradata
+  :key_dir: /home/crlb/Git/glint/glint_backup/example/keyrings/live
+:hierarchy:
+  - secrets

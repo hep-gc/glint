@@ -1,0 +1,390 @@
+#!/bin/env python
+#
+# glint_backup:
+#    Is a stand alone utility for creating incremental backups of a glance repository
+#    into a locally mounted directory. The utility must be run as a non-root user and
+#    can be run periodically by cron. Both images and metadata are backed up.
+#
+# Synopsis:
+#
+#   glint_backup
+#
+# Configuration parameters:
+
+#   glint_backup_admin_pw_key - glint_backup uses hiera, the keyword/value store from
+#                               puppetlabs (see https://projects.puppetlabs.com/projects/hiera)
+#                               to retrieve the admin user's password. This configuration 
+#                               parameter provides the keyword associated with the password
+#                               to be retrieved.
+#
+#   glint_backup_admin_tenant - Specifies the admin tenant to be used to perform the backup.
+#
+#   glint_backup_admin_user   - Specifies the admin user to be used to perform the backup.
+#
+#   glint_backup_auth_URL     - Specifies the public URL for the keystone server.
+#
+#   glint_backup_dir          - Specifies the path of the locally mounted directory where
+#                               backups are to be written.
+#
+#   glint_backup_hiera_config - Specifies the path of the hiera configuration file to be used.
+#
+#   glint_backup_logfile      - Specifies the path of the glint_backup logfile. This file must
+#                               be writeable by the glint_back command.
+#
+
+import hashlib
+import logging
+import json
+import os
+from subprocess import Popen, PIPE
+import sys
+import time
+
+from keystoneclient.v2_0 import client as keystone_api
+import glanceclient as glance_api
+
+# Set environment, determine if master or slave, and call the appropriate function.
+def main (argv):
+    # Set the system command path. 
+    os.environ['PATH'] = '/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin'
+
+    # Set the configuration file path.
+    if len(argv) > 1:
+        config_file = argv[1]
+    else:
+        config_file = '/usr/local/etc/glint_backup.conf'
+
+    # Read JSON configuration file.
+    #   confile=open('/usr/local/etc/glint_backup.conf')
+    confile=open(config_file)
+    config = json.load(confile)
+    confile.close()
+
+    # Establish a log file.
+    global logger
+    logger = logging.getLogger('glint_backup')
+    handler = logging.FileHandler(config['glint_backup_logfile'])
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler) 
+    logger.setLevel(logging.INFO)
+
+    # Ensure we are not running as root.
+    uid = os.getuid()
+    if uid == 0:
+        logger.error('Error: glint_backup must not be run as root; terminating.')
+        return 1
+
+    # Ensure only one glint_backup is running at one time.
+    p = Popen(['ps', '--no-headers', '-fC', 'glint_backup'], stdout=PIPE, stderr=PIPE)
+    stdout, stderr = p.communicate()
+    
+    if stderr != '' or len(stdout.split()) > 1:
+        logger.error('Error: There is more than one glint_backup running. This one is terminating.')
+        return 1
+
+    logger.info('Starting.')
+
+    # Authenticate and authorize with keystone.
+    p = Popen(['hiera', '-c', config['glint_backup_hiera_config'], config['glint_backup_admin_pw_key']], stdout=PIPE, stderr=PIPE)
+    pw, stder = p.communicate()
+
+    try:
+        keystone = keystone_api.Client(auth_url=config['glint_backup_auth_URL'],
+            tenant_name=config['glint_backup_admin_tenant'],
+            username=config['glint_backup_admin_user'],
+            password=pw[:-1])
+    except:
+        logger.error('Error: unable to connect to keystone at "%s"; terminating.'%(config['glint_backup_auth_URL']))
+        return 1
+
+    # Establish glance connectivity.
+    try:
+        glance_endpoint = keystone.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
+        glance = glance_api.Client('2',glance_endpoint,token=keystone.auth_token)
+    except:
+        logger.error('Error: unable to connect to glance at "%s"; terminating.'%(glance_endpoint))
+        return 1
+
+    changelog = []
+    images = {}
+    image_xref = {}
+    tenant_xref = {}
+    tenants = sorted(keystone.tenants.list())
+    for tenant in tenants:
+        tenant_xref[tenant.name] = tenant.id
+
+        try:
+            kwargs = {'filters': {'owner': tenant.id, 'status': 'active'}}
+            images[tenant.name] = sorted(glance.images.list(**kwargs))
+        except:
+            logger.error('Error: unable to retrieve image list for tenant "%s"; terminating.'%(tenant.name))
+            return 1
+
+        for image in images[tenant.name]:
+            image_info = [
+                'name', image.name,
+                'id', image.id,
+                'status', image.status,
+                'visibility', image.visibility,
+                'protected', image.protected,
+                'checksum', image.checksum,
+                'created_at', image.created_at,
+                'updated_at', image.updated_at,
+                'size', image.size,
+                'container_format', image.container_format,
+                'disk_format', image.disk_format,
+                'min_ram', image.min_ram,
+                'min_disk', image.min_disk,
+                ]
+
+            if 'description' in image:
+                image_info.append('description')
+                image_info.append(image.description)
+
+            if 'image_type' in image:
+                image_info.append('image_type')
+                image_info.append(image.image_type)
+
+            image_xref[image.id] = image_info
+
+
+    # Determine previous backup directory (possibly none).
+    version_count = len(os.listdir(config['glint_backup_dir']))
+    if version_count > 0:
+        previous_dir = '%s/%04.0f'%(config['glint_backup_dir'],version_count)
+        if not os.path.exists(previous_dir):
+            logger.error('Previous backup directory "%s" does not exist.'%(previous_dir))
+            return 1
+
+        # Check hashes to to determine whether any changes need to be backed up.
+        fd = open('%s/__version_hash'%(previous_dir), 'rb')
+        old_version_hash = fd.read()
+        fd.close()
+
+        if old_version_hash == get_version_hash(tenants, tenant_xref, images, image_xref):
+            logger.info('Nothing to do.')
+            return 0
+
+
+    # Determine current backup name and create directory.
+    current_dir = '%s/%04.0f'%(config['glint_backup_dir'],(version_count + 1))
+    p = Popen(['mkdir', '-p', current_dir], stdout=PIPE, stderr=PIPE)
+    stdout, stderr = p.communicate()
+
+    if stderr != '':
+        logger.error('Unable to create new current backup "%s".'%(current_dir))
+        return 1
+
+    logger.info('Current backup directory=%s.'%(current_dir))
+
+    # Copy/archive previous tenant directories.
+    if version_count > 0:
+        for tenant_dir in os.listdir(previous_dir):
+            previous_subdir = '%s/%s'%(previous_dir,tenant_dir)
+            if os.path.isdir(previous_subdir):
+                p = Popen(['cp', '-al', previous_subdir, current_dir], stdout=PIPE, stderr=PIPE)
+                stdout, stderr = p.communicate()
+
+                if stderr != '':
+                    logger.error('Unable to archive previous backup ("%s/*") - %s'%(previous_subdir,stderr))
+                    return 1
+
+    # Remove obsolete backups from current directory.
+    for tenant_dir in os.listdir(current_dir):
+        current_subdir = '%s/%s'%(current_dir,tenant_dir)
+        if os.path.isdir(current_subdir):
+            if tenant_dir in tenant_xref and len(images[tenant_dir]) > 0:
+                for file in os.listdir(current_subdir):
+                    if file[-9:] != '-metadata':
+                        if not file in image_xref:
+                            logger.info('Removing image and metadata, tenant=%s, image_id=%s'%(tenant_dir,file))
+                            changelog.append('Removing image and metadata, tenant=%s, image_id=%s'%(tenant_dir,file))
+                            os.remove('%s/%s'%(current_subdir,file))
+                            os.remove('%s/%s-metadata'%(current_subdir,file))
+            else:
+                logger.info('Removing tenant, tenant=%s'%(tenant_dir))
+                changelog.append('Removing tenant, tenant=%s'%(tenant_dir))
+                p = Popen(['rm', '-rf', current_subdir], stdout=PIPE, stderr=PIPE)
+                stdout, stderr = p.communicate()
+
+                if stderr != '':
+                    logger.error('Unable to remove obsolete tenant from backup archive ("%s").'%(current_subdir))
+                    return 1
+
+    # Testing: allow for the deletion of images and tenants.
+    if config['glint_backup_testing'] == 'True':
+        print 'glint_backup: Testing, pausing for 10 seconds.'
+        time.sleep(10)
+        print 'glint_backup: Test resuming.'
+
+    # Backup new/changed images.
+    for tenant in tenants:
+        # Ignore tenants with no images.
+        if len(images[tenant.name]) < 1:
+            continue
+
+        # Ensure tenant subdirectory exists.
+        current_subdir = '%s/%s'%(current_dir,tenant.name)
+        if not os.path.isdir(current_subdir):
+            p = Popen(['mkdir', '-p', current_subdir], stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
+
+            if stderr != '':
+                logger.error('Unable to create tenant subdirectory in current backup ("%s").'%(current_subdir))
+                return 1
+
+        # Backup new/changed images for the current tenant.
+        for image in images[tenant.name]:
+            if os.path.isfile('%s/%s'%(current_subdir,image.id)) and os.path.isfile('%s/%s-metadata'%(current_subdir,image.id)):
+                fd = open('%s/%s-metadata'%(current_subdir,image.id),'rb')
+                old_metadata = json.loads(fd.read())
+                fd.close
+            else:
+                old_metadata = []
+
+            # Get, save, and checksum the current image if it has changed.
+            current_checksum = get_checksum(image_xref[image.id])
+            if current_checksum != get_checksum(old_metadata):
+                logger.info('Saving image, tenant=%s, image=%s, image_id=%s'%(tenant.name,image.name,image.id))
+                changelog.append('Saving image, tenant=%s, image=%s, image_id=%s'%(tenant.name,image.name,image.id))
+                # Remove any old copy from current directory.
+                try:
+                    os.remove('%s/%s'%(current_subdir,image.id))
+                except:
+                    pass
+
+                # Retrieve and save new copy in current directory.
+                try:
+                    image_data = glance.images.data(image.id,True)
+                    with open('%s/%s'%(current_subdir,image.id),'wb') as fd:
+                        for data_chunk in image_data:
+                            fd.write(data_chunk)
+                except:
+#                   try:
+#                       ok = glance.images.get(image.id)
+
+#                       # Network error on download; let's abort.
+#                       logger.error('Network error iduring download of image. Removal of "%s" recommended.'%(current_dir)
+#                       return 1
+#                   except:
+
+                    # Image was deleted while the backup was happening. Remove image from backup.
+                    logger.warning('Image "%s" was deleted from tenant "%s" and is being deleted from this backup.'%(image.name,tenant.name))
+                    changelog.append('Image "%s" was deleted from tenant "%s" and is being deleted from this backup.'%(image.name,tenant.name))
+
+                    try:
+                        os.remove('%s/%s'%(current_subdir,image.id))
+                        os.remove('%s/%s-metadata'%(current_subdir,image.id))
+                    except:
+                        pass
+
+                    image_xref[image.id] = '__deleted__'
+
+                    continue
+
+                # Checksum new image backup.
+                retrieved_checksum = md5sum('%s/%s'%(current_subdir,image.id))
+                if retrieved_checksum == current_checksum:
+                    logger.info('Valid checksum, tenant=%s, image=%s, image_id=%s, checksum=%s'%(tenant.name,image.name,image.id,retrieved_checksum))
+                else:
+                    logger.warning('Checksum changed, tenant=%s, image=%s, image_id=%s, current_checksum=%s, retrieved_checksum=%s'%(tenant.name,image.name,image.id,current_checksum, retrieved_checksum))
+                    set_checksum(image_xref[image.id], retrieved_checksum)
+
+            # save the current image's metadata if it has changed.
+            if image_xref[image.id] != old_metadata:
+                logger.info('Saving metadata, tenant=%s, image=%s, image_id=%s'%(tenant.name,image.name,image.id))
+                changelog.append('Saving metadata, tenant=%s, image=%s, image_id=%s'%(tenant.name,image.name,image.id))
+                try:
+                    os.remove('%s/%s-metadata'%(current_subdir,image.id))
+                except:
+                    pass
+
+                fd = open('%s/%s-metadata'%(current_subdir,image.id),'wb')
+                fd.write(json.dumps(image_xref[image.id]))
+                fd.close
+
+        # Before moving on to the next tenant, make sure the current tenant still exists.
+        try:
+            ok = keystone.tenants.get(tenant.id)
+        except:
+            # Tenant has been deleted since we started the backup. Remove the tenant from the backup.
+            logger.warning('Tenant "%s" was deleted from the cloud and is being deleted from this backup.'%(tenant.name))
+            changelog.append('Tenant "%s" was deleted from the cloud and is being deleted from this backup.'%(tenant.name))
+
+            p = Popen(['rm', '-rf', current_subdir], stdout=PIPE, stderr=PIPE)
+            stdout, stderr = p.communicate()
+
+            if stderr != '':
+                logger.error('Unable to cleanup after tenant deletion ("%s"). Removal of "%s" recommended.'%(current_subdir, current_dir))
+                return 1
+
+            tenant_xref[tenant.name] = '__deleted__'
+
+    # Write the version's change log.
+    fd = open('%s/__changelog'%(current_dir),'wb')
+    fd.write(json.dumps(changelog))
+    fd.close
+
+    # Write the version hash.
+    fd = open('%s/__version_hash'%(current_dir), 'wb')
+    fd.write(get_version_hash(tenants, tenant_xref, images, image_xref))
+    fd.close()
+
+    logger.info('All done.')
+
+
+# get_checksum: Return the checksum from an image's metadata list.
+def get_checksum (metadata):
+    global logger
+    logger.debug('get_checksum input metadata=%s'%(metadata))
+    for i in range(0, len(metadata), 2):
+        if metadata[i] == 'checksum':
+            logger.debug('get_checksum returning "%s"'%(metadata[i+1]))
+            return metadata[i+1]
+
+    logger.debug('get_checksum returning empty string.')
+    return ''
+
+# get_version_hash: Return a unique hash string for the backup version.
+def get_version_hash (tenants, tenant_xref, images, image_xref):
+    hash = []
+    for tenant in tenants:
+        if tenant_xref[tenant.name] == '__deleted__':
+            continue
+
+        hash.append(tenant.name)
+        hash.append(tenant.id)
+
+        for image in images[tenant.name]:
+            if image_xref[image.id] == '__deleted__':
+                continue
+
+            hash.append(image_xref[image.id])
+
+    return hashlib.md5(str(hash)).hexdigest()
+
+# md5sum: Return the image checksum for the specified file.
+def md5sum(filename, blocksize=65536):
+    hash = hashlib.md5()
+    with open(filename, "r+b") as fd:
+        for block in iter(lambda: fd.read(blocksize), ""):
+            hash.update(block)
+    return hash.hexdigest()
+
+# set_checksum: update the checksum within an image's metadata list.
+def set_checksum (metadata, new_checksum):
+    global logger
+    logger.debug('set_checksum input metadata=%s, new_checksum=%s.'%(metadata, new_checksum))
+    for i in range(0, len(metadata), 2):
+        if metadata[i] == 'checksum':
+            logger.debug('set_checksum success.')
+            metadata[i+1] = new_checksum
+            return metadata[i+1]
+
+    logger.debug('set_checksum failed.')
+    return ''
+
+# Entry.
+if __name__ == "__main__":
+    main(sys.argv)
