@@ -1,35 +1,9 @@
 #!/bin/env python
 #
-# glint_backup:
-#    Is a stand alone utility for creating incremental backups of a glance repository
-#    into a locally mounted directory. The utility must be run as a non-root user and
-#    can be run periodically by cron. Both images and metadata are backed up.
+# glint_backup is a stand alone utility for creating incremental backups of glance
+# repositories. for more information, see:
 #
-# Synopsis:
-#
-#   glint_backup
-#
-# Configuration parameters:
-
-#   glint_backup_admin_pw_key - glint_backup uses hiera, the keyword/value store from
-#                               puppetlabs (see https://projects.puppetlabs.com/projects/hiera)
-#                               to retrieve the admin user's password. This configuration 
-#                               parameter provides the keyword associated with the password
-#                               to be retrieved.
-#
-#   glint_backup_admin_tenant - Specifies the admin tenant to be used to perform the backup.
-#
-#   glint_backup_admin_user   - Specifies the admin user to be used to perform the backup.
-#
-#   glint_backup_auth_URL     - Specifies the public URL for the keystone server.
-#
-#   glint_backup_dir          - Specifies the path of the locally mounted directory where
-#                               backups are to be written.
-#
-#   glint_backup_hiera_config - Specifies the path of the hiera configuration file to be used.
-#
-#   glint_backup_logfile      - Specifies the path of the glint_backup logfile. This file must
-#                               be writeable by the glint_back command.
+#               https://github.com/hep-gc/glint/wiki/glint_backup
 #
 
 import hashlib
