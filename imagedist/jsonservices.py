@@ -317,6 +317,7 @@ class Object(object):
 
 @csrf_exempt
 def listsites(request):
+    print "try to list sites"
     try:
         user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
         s = site.objects.filter()
