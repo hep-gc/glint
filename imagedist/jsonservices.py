@@ -10,9 +10,12 @@ from imagedist.models import site,user,credential
 
 import json,datetime,threading,time,os
 
-_auth_url='http://rat01.heprc.uvic.ca:5000/v2.0'
-_glance_url='http://rat01.heprc.uvic.ca:5000/v2.0'
-_root_site = 'Rat01'
+stream = open("glint_services.yaml", 'r')
+cfg = yaml.load(stream)
+
+_auth_url=cfg['_auth_url']
+_glance_url=['_glance_url']
+_root_site = ['_root_site']
 
 def savi_fix(keystone,glance_ep):
     if 'iam.savitestbed.ca' in keystone.auth_url:
