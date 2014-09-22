@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from pprint import pprint
 
 import keystoneclient.v2_0.client as ksclient
-import glanceclient
+import glanceclient,yaml
 
 from django.views.decorators.csrf import csrf_exempt
 from imagedist.models import site,user,credential
