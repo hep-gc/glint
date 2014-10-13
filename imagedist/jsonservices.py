@@ -3,16 +3,19 @@ from django.http import HttpResponse
 from pprint import pprint
 
 import keystoneclient.v2_0.client as ksclient
-import glanceclient
+import glanceclient,yaml
 
 from django.views.decorators.csrf import csrf_exempt
 from imagedist.models import site,user,credential
 
 import json,datetime,threading,time,os
 
-_auth_url='http://rat01.heprc.uvic.ca:5000/v2.0'
-_glance_url='http://rat01.heprc.uvic.ca:5000/v2.0'
-_root_site = 'Rat01'
+stream = open("glint_services.yaml", 'r')
+cfg = yaml.load(stream)
+
+_auth_url=cfg['auth_url']
+_glance_url=cfg['glance_url']
+_root_site=cfg['root_site']
 
 def savi_fix(keystone,glance_ep):
     if 'iam.savitestbed.ca' in keystone.auth_url:
@@ -29,7 +32,7 @@ def _get_images(keystone):
 @csrf_exempt
 def getImages(request):
     try:
-        keystone = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+        keystone = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         print "keystone info %s"%keystone.auth_tenant_id
         ret_obj = {}
         ret_obj['rows']=[]
@@ -209,7 +212,7 @@ class imagecopyhandler():
             keystone_src=''
             if self.source_site ==_root_site:
                 print "copy from Rat is source"
-                keystone_src = ksclient.Client(token=self.user_token,tenant_name=self.local_tenent,auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+                keystone_src = ksclient.Client(token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
             else:
                 src_site_name = site.objects.filter(name=self.source_site)
                 user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
@@ -247,7 +250,7 @@ class imagecopyhandler():
             keystone_dest=''
             if self.remote_site ==_root_site:
                 print "copy to Rat is dest"
-                keystone_dest = ksclient.Client(token=self.user_token,tenant_name=self.local_tenent,auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+                keystone_dest = ksclient.Client(token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
             else:
                 remote_site_name = site.objects.filter(name=self.remote_site)
                 user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
@@ -275,7 +278,7 @@ class imagecopyhandler():
 def save(request):
     try:
         jsonMsg = request.POST['jsonMsg']
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         
         jsonMsgObj = json.loads(jsonMsg)
        
@@ -305,7 +308,7 @@ def save(request):
 @csrf_exempt
 def credentials(request):
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         return HttpResponse("credentials: user is valid")
@@ -317,8 +320,9 @@ class Object(object):
 
 @csrf_exempt
 def listsites(request):
+    print "try to list sites"
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         s = site.objects.filter()
         
         response = []
@@ -334,7 +338,7 @@ def listsites(request):
 @csrf_exempt
 def deletesite(request):
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_id = request.POST['SITE_ID']
@@ -352,7 +356,7 @@ def deletesite(request):
 @csrf_exempt
 def createsite(request):
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_data = eval(request.POST['SITEDATA'])
@@ -385,7 +389,7 @@ def _auto_register_user(request):
 @csrf_exempt
 def addcredential(request):
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url='http://rat01.heprc.uvic.ca:5000/v2.0')
+        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         cred_data = eval(request.POST['CREDDATA'])
            

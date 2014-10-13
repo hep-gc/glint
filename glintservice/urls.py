@@ -8,7 +8,7 @@ urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'glintservice.views.home', name='home'),
     url(r'^image_dist', include('imagedist.urls')),
-
+    #url(r'^$', include('imagedist.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
     # url(r'^admin/doc/', include('django.contrib.admindocs.urls')),
 
