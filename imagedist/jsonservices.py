@@ -389,6 +389,7 @@ def _auto_register_user(request):
 @csrf_exempt
 def addcredential(request):
     try:
+        print "try to add credential"
         user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         cred_data = eval(request.POST['CREDDATA'])
