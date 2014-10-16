@@ -404,9 +404,15 @@ def hascredential(request):
         cred = credential.objects.filter(user=user_id,site=site_id)
         #print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
         if len(cred) == 0:
-            return HttpResponse('{"result":False,"error":False}')
+            str_js = '{"result":False,"error":False}'
+            ret_arr = []
+            ret_arr.append(str_js)
+            return HttpResponse(json.dumps(ret_arr[0]))
         else: 
-            return HttpResponse('{"result":True,"error":False}')
+            str_js = '{"result":True,"error":False}'
+            ret_arr = []
+            ret_arr.append(str_js)
+            return HttpResponse(json.dumps(ret_arr[0]))
     except:
         e = sys.exc_info()[0]
         print "Exception %s"%e
