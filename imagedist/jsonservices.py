@@ -8,7 +8,7 @@ import glanceclient,yaml
 from django.views.decorators.csrf import csrf_exempt
 from imagedist.models import site,user,credential
 
-import json,datetime,threading,time,os
+import json,datetime,threading,time,os,sys
 
 stream = open("glint_services.yaml", 'r')
 cfg = yaml.load(stream)
@@ -389,7 +389,7 @@ def _auto_register_user(request):
 @csrf_exempt
 def hascredential(request):
     try:
-        print "check if request is valid, then check if use has a credential for this site"
+        print "check if request is valid, then check if user has a credential for this site"
         user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         site_id = request.POST['SITE_ID']
@@ -400,6 +400,8 @@ def hascredential(request):
         
         return HttpResponse('{"result":"True"},{"error":"False"}')
     except:
+        e = sys.exc_info()[0]
+        print "Exception %s"%e
         return HttpResponse('{"result":"False"},{"error":"True"}')
     
 @csrf_exempt
