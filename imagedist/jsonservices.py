@@ -279,7 +279,7 @@ class imagecopyhandler():
 def save(request):
     try:
         jsonMsg = request.POST['jsonMsg']
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         
         jsonMsgObj = json.loads(jsonMsg)
        
@@ -309,7 +309,7 @@ def save(request):
 @csrf_exempt
 def credentials(request):
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         return HttpResponse("credentials: user is valid")
@@ -323,7 +323,7 @@ class Object(object):
 def listsites(request):
     print "try to list sites"
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         s = site.objects.filter()
         
         response = []
@@ -339,7 +339,7 @@ def listsites(request):
 @csrf_exempt
 def deletesite(request):
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_id = request.POST['SITE_ID']
@@ -357,7 +357,7 @@ def deletesite(request):
 @csrf_exempt
 def createsite(request):
     try:
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_data = eval(request.POST['SITEDATA'])
@@ -414,7 +414,7 @@ def hascredential(request):
 def addcredential(request):
     try:
         #print "try to add credential"
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         cred_data = eval(request.POST['CREDDATA'])
            
