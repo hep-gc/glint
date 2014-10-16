@@ -394,6 +394,7 @@ def hascredential(request):
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         site_id = request.POST['SITE_ID']
         user_id = request.POST['USER_ID']
+        print "site id hopefully %s and user id %s"%(site_id,user_id)
         cred = credential.objects.filter(user=user_id,site=site_id)
         print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
         #print "site id hopefully %s and user id %s"%(site_id,user_id)
