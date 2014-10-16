@@ -6,7 +6,8 @@ import keystoneclient.v2_0.client as ksclient
 import glanceclient,yaml
 
 from django.views.decorators.csrf import csrf_exempt
-from imagedist.models import site,user,credential
+from imagedist.models import site,credential
+from imagedist.models import user
 
 import json,datetime,threading,time,os,sys
 
@@ -390,14 +391,13 @@ def _auto_register_user(request):
 def hascredential(request):
     try:
         print "check if request is valid, then check if user has a credential for this site"
-        user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         site_id = request.POST['SITE_ID']
         user_name = request.POST['USER_ID']
         print "have un: %s and site id :%s "%(user_name,site_id)
-        objs = user.objects
-        print "User Ojbects are %s"%objs
-        user_id = 1
+        users = user.objects.filter(username=user_name)
+        user_id = users.pk
         #user_id = user_obj[0].pk
         print "site id hopefully %s and user name %s id is %s"%(site_id,user_name,user_id)
         cred = credential.objects.filter(user=user_id,site=site_id)
