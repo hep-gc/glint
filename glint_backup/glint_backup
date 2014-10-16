@@ -124,7 +124,12 @@ def main (argv):
 
 
     # Determine previous backup directory (possibly none).
-    version_count = len(os.listdir(config['glint_backup_dir']))
+    try:
+        version_count = len(os.listdir(config['glint_backup_dir']))
+    except:
+        logger.error('Error: unable to retrieve the count of current backup versions. Is the backup directory ("%s") mounted?'%(config['glint_backup_dir']))
+        return 1
+
     if version_count > 0:
         previous_dir = '%s/%04.0f'%(config['glint_backup_dir'],version_count)
         if not os.path.exists(previous_dir):
