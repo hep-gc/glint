@@ -390,22 +390,23 @@ def _auto_register_user(request):
 @csrf_exempt
 def hascredential(request):
     try:
-        print "check if request is valid, then check if user has a credential for this site"
+        #print "check if request is valid, then check if user has a credential for this site"
         os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         site_id = request.POST['SITE_ID']
         user_name = request.POST['USER_ID']
-        print "have un: %s and site id :%s "%(user_name,site_id)
+        #print "have un: %s and site id :%s "%(user_name,site_id)
         usr = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
-        print "need to get past this %s"%usr
+        #print "need to get past this %s"%usr
         user_id = usr[0].pk
         #user_id = user_obj[0].pk
-        print "site id hopefully %s and user name %s id is %s"%(site_id,user_name,user_id)
+        #print "site id hopefully %s and user name %s id is %s"%(site_id,user_name,user_id)
         cred = credential.objects.filter(user=user_id,site=site_id)
-        print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
-        
-        
-        return HttpResponse('{"result":"True"},{"error":"False"}')
+        #print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
+        if len(cred) == 0:
+            return HttpResponse('{"result":False},{"error":"False"}')
+        else: 
+            return HttpResponse('{"result":True},{"error":"False"}')
     except:
         e = sys.exc_info()[0]
         print "Exception %s"%e
