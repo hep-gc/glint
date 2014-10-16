@@ -407,12 +407,12 @@ def hascredential(request):
             str_js = '{"result":False,"error":False}'
             ret_arr = []
             ret_arr.append(str_js)
-            return HttpResponse(json.dumps(ret_arr[0]))
+            return HttpResponse(json.dumps(ret_arr))
         else: 
             str_js = '{"result":True,"error":False}'
             ret_arr = []
             ret_arr.append(str_js)
-            return HttpResponse(json.dumps(ret_arr[0]))
+            return HttpResponse(json.dumps(ret_arr))
     except:
         e = sys.exc_info()[0]
         print "Exception %s"%e
