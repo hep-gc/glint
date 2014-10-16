@@ -412,14 +412,21 @@ def hascredential(request):
             #ret_arr.append(str_js)
             return HttpResponse(json.dumps(str_js))
         else: 
-            str_js = '{"result":True,"error":False}'
-            ret_arr = []
-            ret_arr.append(str_js)
-            return HttpResponse(json.dumps(ret_arr))
+            str_js={}
+            str_js['result']=True
+            str_js['error']=False
+            #ret_arr = []
+            #ret_arr.append(str_js)
+            return HttpResponse(json.dumps(str_js))
     except:
         e = sys.exc_info()[0]
         print "Exception %s"%e
-        return HttpResponse('{"result":False,"error":True}')
+        str_js={}
+        str_js['result']=False
+        str_js['error']=True
+        #ret_arr = []
+        #ret_arr.append(str_js)
+        return HttpResponse(json.dumps(str_js))
     
 @csrf_exempt
 def addcredential(request):
