@@ -404,10 +404,13 @@ def hascredential(request):
         cred = credential.objects.filter(user=user_id,site=site_id)
         #print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
         if len(cred) == 0:
-            str_js = '{"result":False,"error":False}'
-            ret_arr = []
-            ret_arr.append(str_js)
-            return HttpResponse(json.dumps(ret_arr))
+            #str_js = '{"result":False,"error":False}'
+            str_js={}
+            str_js['result']=False
+            str_js['error']=False
+            #ret_arr = []
+            #ret_arr.append(str_js)
+            return HttpResponse(json.dumps(str_js))
         else: 
             str_js = '{"result":True,"error":False}'
             ret_arr = []
