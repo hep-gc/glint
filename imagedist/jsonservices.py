@@ -396,7 +396,7 @@ def hascredential(request):
         site_id = request.POST['SITE_ID']
         user_name = request.POST['USER_ID']
         print "have un: %s and site id :%s "%(user_name,site_id)
-        users = user.objects.filter(username=user_name)
+        users = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
         user_id = users.pk
         #user_id = user_obj[0].pk
         print "site id hopefully %s and user name %s id is %s"%(site_id,user_name,user_id)
