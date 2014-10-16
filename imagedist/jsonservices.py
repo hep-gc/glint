@@ -404,13 +404,13 @@ def hascredential(request):
         cred = credential.objects.filter(user=user_id,site=site_id)
         #print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
         if len(cred) == 0:
-            return HttpResponse('{{"result":False},{"error":"False"}}')
+            return HttpResponse('{"result":False,"error":False}')
         else: 
-            return HttpResponse('{{"result":True},{"error":"False"}}')
+            return HttpResponse('{"result":True,"error":False}')
     except:
         e = sys.exc_info()[0]
         print "Exception %s"%e
-        return HttpResponse('{"result":"False"},{"error":"True"}')
+        return HttpResponse('{"result":False,"error":True}')
     
 @csrf_exempt
 def addcredential(request):
