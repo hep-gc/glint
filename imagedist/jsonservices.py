@@ -211,7 +211,7 @@ class imagecopyhandler():
         try:
             keystone_src=''
             if self.source_site ==_root_site:
-                print "copy from Rat is source"
+                #print "copy from Rat is source"
                 keystone_src = ksclient.Client(token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
             else:
                 src_site_name = site.objects.filter(name=self.source_site)
@@ -393,7 +393,10 @@ def hascredential(request):
         user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         site_id = request.POST['SITE_ID']
-        print "site id hopefully %s"%site_id
+        user_id = request.POST['USER_ID']
+        cred = credential.objects.filter(user=user_id,site=site_id)
+        print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
+        #print "site id hopefully %s and user id %s"%(site_id,user_id)
         
         return HttpResponse('{"result":"True"},{"error":"False"}')
     except:
