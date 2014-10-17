@@ -406,10 +406,15 @@ def deletecredential(request):
         #print "site id hopefully %s and user name %s id is %s"%(site_id,user_name,user_id)
         
         cred = credential.objects.filter(user=user_id,site=site_id)
+        print "Found Cred %s"%cred
         cred.delete()
+        print "Cred Removed"
+        
         return HttpResponse("Success Removing Credential")
         #print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
     except:
+        e = sys.exc_info()[0]
+        print "Exception occured removing cred %s"%e
         return HttpResponse("Error Removing Credential")
    
 @csrf_exempt
