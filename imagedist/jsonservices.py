@@ -424,7 +424,7 @@ def hascredential(request):
             #ret_arr = []
             #ret_arr.append(str_js)
             return HttpResponse(json.dumps(str_js))
-            except:
+    except:
         e = sys.exc_info()[0]
         print "Exception %s"%e
         str_js={}
