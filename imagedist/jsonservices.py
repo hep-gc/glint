@@ -386,7 +386,32 @@ def _auto_register_user(request):
         usr[0].token = token
         usr[0].save()
         return usr[0]
-    
+
+@csrf_exempt
+def deletecredential(request):
+    try:
+        print "Try to Remove Credential "
+        #print "check if request is valid, then check if user has a credential for this site"
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
+        site_id = request.POST['SITE_ID']
+        user_name = request.POST['USER_ID']
+        #ck_type = request.POST['CK_TYPE']
+        #print "have un: %s and site id :%s "%(user_name,site_id)
+        
+        usr = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
+        #print "need to get past this %s"%usr
+        user_id = usr[0].pk
+        #user_id = user_obj[0].pk
+        #print "site id hopefully %s and user name %s id is %s"%(site_id,user_name,user_id)
+        
+        cred = credential.objects.filter(user=user_id,site=site_id)
+        cred.delete()
+        return HttpResponse("Success Removing Credential")
+        #print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
+    except:
+        return HttpResponse("Error Removing Credential")
+   
 @csrf_exempt
 def hascredential(request):
     try:
