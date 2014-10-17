@@ -390,14 +390,15 @@ def _auto_register_user(request):
 @csrf_exempt
 def deletecredential(request):
     try:
-        print "Try to Remove Credential "
+        print "Try to Remove Credential with %s"%request.POST['USER_TOKEN']
         #print "check if request is valid, then check if user has a credential for this site"
         os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
+        print ""
         site_id = request.POST['SITE_ID']
         user_name = request.POST['USER_ID']
         #ck_type = request.POST['CK_TYPE']
-        #print "have un: %s and site id :%s "%(user_name,site_id)
+        print "have un: %s and site id :%s "%(user_name,site_id)
         
         usr = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
         #print "need to get past this %s"%usr
