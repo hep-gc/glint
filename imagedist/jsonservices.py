@@ -395,13 +395,19 @@ def hascredential(request):
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         site_id = request.POST['SITE_ID']
         user_name = request.POST['USER_ID']
+        ck_type = request.POST['CK_TYPE']
         #print "have un: %s and site id :%s "%(user_name,site_id)
+        
         usr = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
         #print "need to get past this %s"%usr
         user_id = usr[0].pk
         #user_id = user_obj[0].pk
         #print "site id hopefully %s and user name %s id is %s"%(site_id,user_name,user_id)
-        cred = credential.objects.filter(user=user_id,site=site_id)
+        cred = None
+        if ck_type == "ONE":
+            cred = credential.objects.filter(user=user_id,site=site_id)
+        else:
+            cred = credential.objects.filter(site=site_id)
         #print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
         if len(cred) == 0:
             #str_js = '{"result":False,"error":False}'
@@ -418,7 +424,7 @@ def hascredential(request):
             #ret_arr = []
             #ret_arr.append(str_js)
             return HttpResponse(json.dumps(str_js))
-    except:
+            except:
         e = sys.exc_info()[0]
         print "Exception %s"%e
         str_js={}
