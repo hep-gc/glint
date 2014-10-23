@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 from imagedist.models import site,credential
 from imagedist.models import user
 
-import json,datetime,threading,time,os,sys
+import json,datetime,threading,time,os,sys,re
 
 stream = open("glint_services.yaml", 'r')
 cfg = yaml.load(stream)
@@ -362,8 +362,13 @@ def createsite(request):
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_data = eval(request.POST['SITEDATA'])
-        #print "create site with %s"%site_data
-        s=site(name=site_data['name'],url=site_data['url'],authport=site_data['port'],type=site_data['disk_format'])
+        print "create site with %s"%site_data
+        site_url=site_data['url']
+        rexp_url_proc = re.compile('http://\s+:')
+        url_str = rexp_url_proc.search(site_url)
+        print "create site found found %s"%url_str
+        #s=site(name=site_data['name'],url=site_data['url'],authport=site_data['port'],type=site_data['disk_format'])
+        s=site(name=site_data['name'],url=site_data['url'],authport='5000',version='v2.0',type=site_data['disk_format'])
         s.save()
         #print "create site complete"
         return HttpResponse("sites: create is valid")
