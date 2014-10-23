@@ -451,7 +451,7 @@ def getcredential(request):
         cred = credential.objects.filter(user=user_id,site=site_id)
         
         if len(cred) is 1:
-            print "Found Credential Return as Json obj %s"%cred
+            #print "Found Credential Return as Json obj %s"%cred
             cred_obj={}
             cred_obj['cred_id']=cred[0].un
             cred_obj['tenant']=cred[0].tenent
@@ -529,7 +529,7 @@ def addcredential(request):
         
         cred = credential.objects.filter(user=usr,site=ste,tenent=cred_data['tenent'])
         if len(cred) is 0:
-            print "credentials does not exist for this user/site/tenent combo so create it"
+            #print "credentials does not exist for this user/site/tenent combo so create it"
             
             cred = credential(user=usr,site=ste[0],tenent=cred_data['tenent'],un=cred_data['username'],pw=cred_data['password'])
             
