@@ -362,7 +362,7 @@ def createsite(request):
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_data = eval(request.POST['SITEDATA'])
-        print "create site with %s"%site_data
+        #print "create site with %s"%site_data
         site_url=site_data['url']
         rexp_url_proc = re.compile('http://[a-zA-Z0-9._]+')
         url_str = rexp_url_proc.search(site_url)
@@ -370,6 +370,8 @@ def createsite(request):
         port_vers = re.split('http://[a-zA-Z0-9._]+:',site_url)
         port_version_array = re.split('/',port_vers[1])
         print "create site found found %s with %s and %s"%(url_str.group(0),port_version_array[0],port_version_array[1])
+        if url_str.group(0) is None or len(port_version_array) is not 2:
+            return HttpResponse("Invalid Site Url")
         #s=site(name=site_data['name'],url=site_data['url'],authport=site_data['port'],type=site_data['disk_format'])
         #s=site(name=site_data['name'],url=site_data['url'],authport='5000',version='v2.0',type=site_data['disk_format'])
         s=site(name=site_data['name'],url=url_str.group(0),authport=port_version_array[0],version=port_version_array[1],type=site_data['disk_format'])
