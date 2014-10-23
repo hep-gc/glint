@@ -17,6 +17,6 @@ urlpatterns = patterns('',
     url(r'/listsites', jsonservices.listsites,name='listsites'),  
     url(r'/addcredential', jsonservices.addcredential,name='addcredential'),  
     url(r'/hascredential', jsonservices.hascredential,name='hascredential'), 
-    url(r'/getcredential', jsonservices.getcredential,name='getcredential'), 
+    url(r'/getcredential', jsonservices.getcredential,name='getcredential'),  
     url(r'/deletecredential', jsonservices.deletecredential,name='delcredential'), 
 )
