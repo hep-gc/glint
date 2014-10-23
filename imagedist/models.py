@@ -6,6 +6,7 @@ class site(models.Model):
     name = models.CharField(max_length=200)
     url = models.CharField(max_length=200,unique=True)
     authport = models.CharField(max_length=200)
+    version = models.CharField(max_length=200)
     #Sites
     OPENSTACK, NIMBUS,EC2,AZURE = 'Openstack','Nimbus','EC2','Azure'
     SITETYPES = ( (OPENSTACK,_(OPENSTACK)),(NIMBUS,_(NIMBUS)),(EC2,_(EC2)) ,(AZURE,_(AZURE))  )
