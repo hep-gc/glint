@@ -92,8 +92,8 @@ def getImages(request):
                             site_list.append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent),"is_public":"%s"%image.is_public,"is_owner":"False"})
                         img_obj['sites']=site_list
                         rows.append(img_obj)
-            except:
-                print "Error Occurred getting images from %s"%cred.site.url
+            except Exception as e:
+                print "Error Occurred getting images from %s error %s"%(cred.site.url,e)
         
         json_msg['sites']=sites
         json_msg['rows']=rows
