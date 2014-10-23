@@ -11,8 +11,8 @@ class user_admin(admin.ModelAdmin):
     list_filter = ['username','tenent','token','lastlogin']
     
 class site_admin(admin.ModelAdmin):
-    list_display = ('name','url','type')
-    list_filter = ['name','url','type']
+    list_display = ('name','url','authport','version','type')
+    list_filter = ['name','url','authport','version','type']
 
 class credential_admin(admin.ModelAdmin):
     list_display = ('user','site','un','pw','tenent')
