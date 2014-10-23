@@ -429,6 +429,37 @@ def deletecredential(request):
         e = sys.exc_info()[0]
         print "Exception occured removing cred %s"%e
         return HttpResponse("Error Removing Credential")
+
+@csrf_exempt
+def getcredential(request):
+    try:
+        #print "check if request is valid, then check if user has a credential for this site"
+        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
+        site_id = request.POST['SITE_ID']
+        user_name = request.POST['USER_ID']
+        #ck_type = request.POST['CK_TYPE']
+        #print "have un: %s and site id :%s "%(user_name,site_id)
+        
+        usr = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
+        #print "need to get past this %s"%usr
+        user_id = usr[0].pk
+        #user_id = user_obj[0].pk
+        #print "site id hopefully %s and user name %s id is %s"%(site_id,user_name,user_id)
+        #cred = None
+        #if ck_type == "ONE":
+        cred = credential.objects.filter(user=user_id,site=site_id)
+        
+        if len(cred) is 1:
+            print "Found Credential Return as Json obj"
+            cred_obj={}
+            cred_obj['cred_id']=cred.un
+            cred_obj['tenant']=cred.tenent
+            return HttpResponse(json.dumps(cred_obj))
+        else:
+            return HttpResponse("Error Getting Credential")
+        #else:
+        #    cred = credential.objects.filter(site=site_id)
    
 @csrf_exempt
 def hascredential(request):
