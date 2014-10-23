@@ -322,7 +322,7 @@ class Object(object):
 
 @csrf_exempt
 def listsites(request):
-    print "try to list sites"
+    print "try to list sites-oK"
     try:
         os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         s = site.objects.filter()
@@ -460,6 +460,8 @@ def getcredential(request):
             return HttpResponse("Error Getting Credential")
         #else:
         #    cred = credential.objects.filter(site=site_id)
+    except:
+        return HttpResponse("Error Getting Credential")
    
 @csrf_exempt
 def hascredential(request):
