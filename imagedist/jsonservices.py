@@ -63,8 +63,9 @@ def getImages(request):
         creds=credential.objects.filter(user=usr)
         for cred in creds:
             try:
-                
+                print "Try to Create Keystone Client"
                 _keystone_ = ksclient.Client(username=cred.un,password=cred.pw,tenant_name=cred.tenent,auth_url="%s:%s/v2.0"%(cred.site.url,cred.site.authport))
+                print "Success"
                 images = _get_images(_keystone_)
                 sites.append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent)})
                 for index,image in enumerate(images):
