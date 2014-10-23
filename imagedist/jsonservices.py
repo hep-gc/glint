@@ -364,9 +364,12 @@ def createsite(request):
         site_data = eval(request.POST['SITEDATA'])
         print "create site with %s"%site_data
         site_url=site_data['url']
-        rexp_url_proc = re.compile('http://\s+:')
+        rexp_url_proc = re.compile('http://[a-zA-Z0-9._]+')
         url_str = rexp_url_proc.search(site_url)
-        print "create site found found %s"%url_str
+        
+        port_vers = re.split('http://[a-zA-Z0-9._]+:',site_url)
+        port_version_array = re.split('/',port_vers[1])
+        print "create site found found %s with %s and %s"%(url_str,port_version_array[0],port_version_array[1])
         #s=site(name=site_data['name'],url=site_data['url'],authport=site_data['port'],type=site_data['disk_format'])
         s=site(name=site_data['name'],url=site_data['url'],authport='5000',version='v2.0',type=site_data['disk_format'])
         s.save()
