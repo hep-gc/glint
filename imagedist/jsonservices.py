@@ -451,10 +451,10 @@ def getcredential(request):
         cred = credential.objects.filter(user=user_id,site=site_id)
         
         if len(cred) is 1:
-            print "Found Credential Return as Json obj"
+            print "Found Credential Return as Json obj %s"%cred
             cred_obj={}
-            cred_obj['cred_id']=cred.un
-            cred_obj['tenant']=cred.tenent
+            cred_obj['cred_id']=cred[0].un
+            cred_obj['tenant']=cred[0].tenent
             return HttpResponse(json.dumps(cred_obj))
         else:
             return HttpResponse("Error Getting Credential")
