@@ -367,7 +367,7 @@ def createsite(request):
         rexp_url_proc = re.compile('http://[a-zA-Z0-9._-]+')
         url_str = rexp_url_proc.search(site_url)
         
-        port_vers = re.split('http://[a-zA-Z0-9._]+:',site_url)
+        port_vers = re.split('http://[a-zA-Z0-9._-]+:',site_url)
         port_version_array = re.split('/',port_vers[1])
         print "create site found found %s with %s and %s"%(url_str.group(0),port_version_array[0],port_version_array[1])
         if url_str.group(0) is None or len(port_version_array) is not 2:
