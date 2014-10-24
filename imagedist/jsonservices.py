@@ -364,7 +364,7 @@ def createsite(request):
         site_data = eval(request.POST['SITEDATA'])
         #print "create site with %s"%site_data
         site_url=site_data['url']
-        rexp_url_proc = re.compile('http://[a-zA-Z0-9._]+')
+        rexp_url_proc = re.compile('http://[a-zA-Z0-9._-]+')
         url_str = rexp_url_proc.search(site_url)
         
         port_vers = re.split('http://[a-zA-Z0-9._]+:',site_url)
