@@ -11,5 +11,5 @@ The Image Distribution Service uses Glance to identify all images across all sit
 
 Glint uses Glance to transfer images from source sites to destination sites using the Glance API.
 
-To setup and use glint, please clone the the glint-service setup scripts at https://github.com/rd37/glint-service , and follow the README 
+To setup and use glint, please clone the the glint-service setup scripts at https://github.com/hep-gc/glint-service , and follow the README 
 
