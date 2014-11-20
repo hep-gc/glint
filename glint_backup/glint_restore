@@ -102,7 +102,7 @@ def main (argv):
         return 1
     if version_count < int(args.version[0]):
         print "This version %s does not exist yet ;) current max version is %s"%(int(args.version[0],version_count))
-        logger.error("This version %s does not exist yet ;) current max version is %s"%(int(args.version[0],version_count)) )
+        logger.error("This version %s does not exist yet ;) current max version is %s"%(int(args.version[0]),version_count) )
         return 1
         
     #previous_version_str = '%04.0f'%(version_count)
