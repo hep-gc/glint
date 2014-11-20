@@ -16,12 +16,17 @@ import time
 
 from keystoneclient.v2_0 import client as keystone_api
 import glanceclient as glance_api
+from glintargparse import GlintArgumentParser
 
 # Set environment, determine if master or slave, and call the appropriate function.
 def main (argv):
     # Set the system command path. 
     os.environ['PATH'] = '/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin'
 
+    gap = GlintArgumentParser()
+    gap.init_backup_arg_parser()
+    args = gap.parser.parse_args()
+    print "args are %s"%args
     # Set the configuration file path.
     if len(argv) > 1:
         config_file = argv[1]
