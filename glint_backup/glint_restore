@@ -126,6 +126,8 @@ def main (argv):
             logger.error('Previous backup directory "%s" does not exist.'%(restore_versioned_tenant_dir))
             return 1
         print "Get meta data from tenant dir at %s"%restore_versioned_tenant_dir
+        os_restore_versioned_tenant_dir = os.listdir(restore_versioned_tenant_dir)
+        print "Images in %s are %s"%(tenant,os_restore_versioned_tenant_dir)
         #check if image is the same as in glance - checksum compare
 
     #if checksum is different or if images does not exist,
