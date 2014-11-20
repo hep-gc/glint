@@ -150,9 +150,9 @@ def main (argv):
     #done
 
 def get_meta_image_info(meta_data,info):
-    print "iterate through %s"%meta_data
+    json_obj = json.loads(meta_data)
     found = False
-    for item in meta_data:
+    for item in json_obj:
         if found is True:
             return item
         if item is info:
