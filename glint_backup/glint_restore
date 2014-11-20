@@ -135,7 +135,7 @@ def main (argv):
                 meta_file = open(  '%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),tenant,metadata)   ,'r')
                 meta_json_string = meta_file.readlines()
                 meta_file.close()
-                print "data:%s"%meta_json_string
+                print "data:%s"%meta_json_string[0]
         #check if image is the same as in glance - checksum compare
 
     #if checksum is different or if images does not exist,
