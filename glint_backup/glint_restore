@@ -132,6 +132,10 @@ def main (argv):
         for metadata in os_restore_versioned_tenant_dir:
             if 'metadata' in metadata:
                 print "found meta data file %s"%metadata
+                meta_file = open(metadata,'r')
+                meta_json_string = meta_file.readlines()
+                meta_file.close()
+                print "data:%s"%meta_json_string
         #check if image is the same as in glance - checksum compare
 
     #if checksum is different or if images does not exist,
