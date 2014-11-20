@@ -101,15 +101,18 @@ def main (argv):
         logger.error("There are no backup version to restore from")
         return 1
     if version_count < int(args.version[0]):
-        print "This version %s does not exist yet ;) current max version is %s"%(int(args.version[0]),version_count)
+        print "Version %s does not exist yet ;) current version is %s"%(int(args.version[0]),version_count)
         logger.error("This version %s does not exist yet ;) current max version is %s"%(int(args.version[0]),version_count) )
         return 1
         
-    #previous_version_str = '%04.0f'%(version_count)
-    
-
     #once version number is identified
     #get all meta-data from the backup-repo
+    #so for each tenant get meta-data of each image
+    restore_dir = '%s/%04.0f'%(config['glint_backup_dir'],int(args.version[0]))
+    if not os.path.exists(restore_dir):
+        logger.error('Previous backup directory "%s" does not exist.'%(restore_dir))
+        return 1
+    print "The restore directory is %s"%restore_dir
     
     #for each meta data 
     #check if image is the same as in glance - checksum compare
