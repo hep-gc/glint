@@ -88,7 +88,13 @@ def main (argv):
     print "Now for the hard work"
     
     #check that user specified a version number and ensure it less that versions available
-    
+    # Determine previous backup directory (possibly none).
+    try:
+        version_count = len(os.listdir(config['glint_backup_dir']))
+    except:
+        logger.error('Error: unable to retrieve the count of current backup versions. Is the backup directory ("%s") mounted?'%(config['glint_backup_dir']))
+        return 1
+    print "showing version count to be %s"%version_count
 
     #once version number is identified
     #get all meta-data from the backup-repo
