@@ -125,23 +125,38 @@ def main (argv):
         if not os.path.exists(restore_versioned_tenant_dir):
             logger.error('Previous backup directory "%s" does not exist.'%(restore_versioned_tenant_dir))
             return 1
-        print "Get meta data from tenant dir at %s"%restore_versioned_tenant_dir
+        #print "Get meta data from tenant dir at %s"%restore_versioned_tenant_dir
         os_restore_versioned_tenant_dir = os.listdir(restore_versioned_tenant_dir)
         #print "Images in %s are %s"%(tenant,os_restore_versioned_tenant_dir)
         
         for metadata in os_restore_versioned_tenant_dir:
             if 'metadata' in metadata:
-                print "found meta data file %s"%metadata
+                #print "found meta data file %s"%metadata
                 meta_file = open(  '%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),tenant,metadata)   ,'r')
                 meta_json_string = meta_file.readlines()
                 meta_file.close()
-                print "data:%s"%meta_json_string[0]
-        #check if image is the same as in glance - checksum compare
+                
+                image_id = get_meta_image_info(meta_json_string[0],"id")
+                image_calc_meta_checksum = get_checksum(meta_json_string[0])
+                image_meta_checksum = get_meta_image_info(meta_json_string[0],"checksum")
+                
+                print "id %s cksum %s data:%s"%(image_id,image_meta_checksum,meta_json_string[0])
+                
+                #check if image is the same as in glance - checksum compare
 
-    #if checksum is different or if images does not exist,
-    #then remove old image and replace with new one
+                #if checksum is different or if images does not exist,
+                #then remove old image and replace with new one
 
     #done
+
+def get_meta_image_info(meta_data,info):
+    found = False
+    for item in meta_data:
+        if found is True:
+            return item
+        if item is info:
+            found = True
+    return None
 
 # get_checksum: Return the checksum from an image's metadata list.
 def get_checksum (metadata):
