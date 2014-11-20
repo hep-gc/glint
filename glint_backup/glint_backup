@@ -62,7 +62,7 @@ def main (argv):
     # Authenticate and authorize with keystone.
     p = Popen(['hiera', '-c', config['glint_backup_hiera_config'], config['glint_backup_admin_pw_key']], stdout=PIPE, stderr=PIPE)
     pw, stder = p.communicate()
-
+    print "Hiera Password is %s:stderr is %s"%(pw,stder)
     try:
         keystone = keystone_api.Client(auth_url=config['glint_backup_auth_URL'],
             tenant_name=config['glint_backup_admin_tenant'],
