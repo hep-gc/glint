@@ -121,10 +121,25 @@ def main (argv):
     #for each tenant in version list do this
     for tenant in os_restore_version_dir:
         #check if tenant exists
+        tenant_exists=False
+        keystone_tenant=None
+        images={}
         keystone_tenants = sorted(keystone.tenants.list())
         #print "Found keystone tenants %s"%keystone_tenants
         for key_ten in keystone_tenants:
-            print "Compare key_ten %s to %s"%(key_ten.name,tenant)
+            #print "Compare key_ten %s to %s"%(key_ten.name,tenant)
+            if key_ten.name == tenant:
+                tenant_exists=True
+                keystone_tenant=key_ten
+                try:
+                    kwargs = {'filters': {'owner': keystone_tenant.id, 'status': 'active'}}
+                    images[keystone_tenant.name] = sorted(glance.images.list(**kwargs))
+                    print "Found Tenant images %s"%images
+                except:
+                    print 'Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name)
+                    logger.error('Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name))
+                    return 1
+                
         
         #for each meta data 
         restore_versioned_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),tenant)
@@ -136,7 +151,7 @@ def main (argv):
         #print "Images in %s are %s"%(tenant,os_restore_versioned_tenant_dir)
         
         for metadata in os_restore_versioned_tenant_dir:
-            if 'metadata' in metadata:
+            if 'metadata' in metadata and tenant_exists:
                 #print "found meta data file %s"%metadata
                 meta_file = open(  '%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),tenant,metadata)   ,'r')
                 meta_json_string = meta_file.readlines()
@@ -146,13 +161,16 @@ def main (argv):
                 #image_calc_meta_checksum = get_checksum(meta_json_string[0])
                 image_meta_checksum = get_meta_image_info(meta_json_string[0],"checksum")
                 
+                
                 #print "id %s cksum %s calc cks %s data:%s"%(image_id,image_meta_checksum,image_calc_meta_checksum,meta_json_string[0])
                 
                 #check if image is the same as in glance - checksum compare
 
                 #if checksum is different or if images does not exist,
                 #then remove old image and replace with new one
-
+        if tenant_exists is False:
+            logger.error('Tenant "%s" does not exist ... ignoring image backup'%(tenant))
+            
     #done
 
 def get_meta_image_info(meta_data,info):
