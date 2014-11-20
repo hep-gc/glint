@@ -24,7 +24,7 @@ def main (argv):
     os.environ['PATH'] = '/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin'
 
     gap = GlintArgumentParser()
-    gap.init_backup_arg_parser()
+    gap.init_restore_arg_parser()
     args = gap.parser.parse_args()
     print "args are %s"%args
     # Set the configuration file path.
@@ -88,6 +88,7 @@ def main (argv):
     print "Now for the hard work"
     
     #check that user specified a version number and ensure it less that versions available
+    
 
     #once version number is identified
     #get all meta-data from the backup-repo
