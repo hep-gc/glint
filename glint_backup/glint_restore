@@ -29,7 +29,8 @@ def main (argv):
     print "args are %s"%args
     # Set the configuration file path.
     if args.cfgfile is not None:
-        config_file = argv[1]
+        print "set config file to %s"%args.cfgfile[0]
+        config_file = args.cfgfile[0]
     else:
         config_file = '/usr/local/etc/glint/glint_backup.conf'
 
