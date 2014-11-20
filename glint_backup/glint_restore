@@ -28,7 +28,7 @@ def main (argv):
     args = gap.parser.parse_args()
     print "args are %s"%args
     # Set the configuration file path.
-    if len(argv) > 1:
+    if args.cfgfile is not None:
         config_file = argv[1]
     else:
         config_file = '/usr/local/etc/glint/glint_backup.conf'
