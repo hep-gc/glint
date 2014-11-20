@@ -94,7 +94,14 @@ def main (argv):
     except:
         logger.error('Error: unable to retrieve the count of current backup versions. Is the backup directory ("%s") mounted?'%(config['glint_backup_dir']))
         return 1
-    print "showing version count to be %s"%version_count
+    print "showing version count to be %s version is %s int type version is %s"%(version_count,args.version[0],int(args.version[0]))
+    
+    if version_count == 0:
+        print "No previous backups detected"
+        logger.error("There are no backup version to restore from")
+        return 1
+    #previous_version_str = '%04.0f'%(version_count)
+    
 
     #once version number is identified
     #get all meta-data from the backup-repo
