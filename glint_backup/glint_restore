@@ -127,7 +127,11 @@ def main (argv):
             return 1
         print "Get meta data from tenant dir at %s"%restore_versioned_tenant_dir
         os_restore_versioned_tenant_dir = os.listdir(restore_versioned_tenant_dir)
-        print "Images in %s are %s"%(tenant,os_restore_versioned_tenant_dir)
+        #print "Images in %s are %s"%(tenant,os_restore_versioned_tenant_dir)
+        
+        for metadata in os_restore_versioned_tenant_dir:
+            if 'metadata' in metadata:
+                print "found meta data file %s"%metadata
         #check if image is the same as in glance - checksum compare
 
     #if checksum is different or if images does not exist,
