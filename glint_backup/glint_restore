@@ -122,7 +122,9 @@ def main (argv):
     for tenant in os_restore_version_dir:
         #check if tenant exists
         keystone_tenants = sorted(keystone.tenants.list())
-        print "Found keystone tenants %s"%keystone_tenants
+        #print "Found keystone tenants %s"%keystone_tenants
+        for key_ten in keystone_tenants:
+            print "Compare key_ten %s to %s"%(key_ten.name,tenant)
         
         #for each meta data 
         restore_versioned_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),tenant)
