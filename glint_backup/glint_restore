@@ -113,7 +113,8 @@ def main (argv):
         logger.error('Previous backup directory "%s" does not exist.'%(restore_dir))
         return 1
     print "The restore directory is %s"%restore_dir
-    
+    os_restore_dir = os.listdir(restore_dir)
+    print "Items in directory are %s"%os_restore_dir
     #for each meta data 
     #check if image is the same as in glance - checksum compare
 
