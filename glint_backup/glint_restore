@@ -150,6 +150,7 @@ def main (argv):
     #done
 
 def get_meta_image_info(meta_data,info):
+    print "iterate through %s"%meta_data
     found = False
     for item in meta_data:
         if found is True:
