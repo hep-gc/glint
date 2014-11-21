@@ -193,11 +193,12 @@ def main (argv):
                 
                 #check if user specified commandline argument filtering which images to replace
                 if args.image_name is not None and args.tenant is not None and glance_img is None:
-                        if image_name == args.image_name:
-                            glance_img=None
-                        else:
-                            #this will prevent the image from being backed up
-                            glance_img=""
+                    print "tenant and image filtering %s compare to %s"%(image_name,args.image_name[0])
+                    if image_name == args.image_name[0]:
+                        glance_img=None
+                    else:
+                        #this will prevent the image from being backed up
+                        glance_img=""
                 
                 if glance_img is None:
                     print "Need to create New Image with %s"%meta_json_string
