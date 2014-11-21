@@ -179,7 +179,14 @@ def main (argv):
                 
                 
                 if glance_img is None:
-                    print "Need to create New Image"
+                    print "Need to create New Image with %s"%metadata
+                    glance_ep_dest = keystone.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
+                    glance_dest = glance_api.Client('1',glance_ep_dest,token=keystone.auth_token)
+                    
+                    #file_loc='%s%s'%(directory,self.img_name)
+                    #fimage = open(file_loc)
+                    #glance_dest.images.create(name=self.img_name,is_public="False",disk_format=self.disk_format,container_format=self.container_format,data=fimage)
+                    
                 #if checksum is different or if images does not exist,
                 #then remove old image and replace with new one
         if tenant_exists is False:
