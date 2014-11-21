@@ -184,9 +184,15 @@ def main (argv):
                     glance_ep_dest = keystone.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
                     glance_dest = glance_api.Client('1',glance_ep_dest,token=keystone.auth_token)
                     
-                    #file_loc='%s%s'%(directory,self.img_name)
-                    #fimage = open(file_loc)
-                    #glance_dest.images.create(name=self.img_name,is_public="False",disk_format=self.disk_format,container_format=self.container_format,data=fimage)
+                    file_loc='%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),tenant,image_id)
+                    fimage = open(file_loc)
+                    image_name = get_meta_image_info(meta_json_string[0],"name")
+                    image_vis = get_meta_image_info(meta_json_string[0],"protected")
+                    image_format = get_meta_image_info(meta_json_string[0],"disk_format")
+                    image_cont_fmt = get_meta_image_info(meta_json_string[0],"container_format")
+                    glance_dest.images.create(name=image_name,is_public=image_vis,disk_format=image_format,container_format=image_cont_fmt,data=fimage)
+                    
+                    
                     
                 #if checksum is different or if images does not exist,
                 #then remove old image and replace with new one
