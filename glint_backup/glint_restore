@@ -170,7 +170,7 @@ def main (argv):
                 for glance_image in images[tenant]:
                     #if glance_image['id'] == image_id:
                     print "Backup Tenant dir %s :: For meta image name %s compare to glance image list name %s"%(tenant,image_name,glance_image['name'])
-                    if glance_image['checksum'] == image_meta_checksum:
+                    if glance_image['checksum'] == image_meta_checksum and glance_image['name'] == image_name:
                         print "Found match for image name %s"%(image_name)
                         glance_img=glance_image
                         #check if image is the same as in glance - checksum compare
