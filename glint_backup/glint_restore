@@ -116,8 +116,20 @@ def main (argv):
     os_restore_version_dir = os.listdir(restore_version_dir)
     del os_restore_version_dir[0]
     del os_restore_version_dir[0]
+    
+    if args.tenant is not None:
+        arg_tenant = args.tenant[0]
+        tenant_removals = []
+        for tenant in os_restore_version_dir:
+            if tenant != arg_tenant:
+                tenant_removals.append(tenant)
+        for tenant_rem in tenant_removals:
+            print "Removing Tenant %s from list of version updates "%tenant_rem
+            os_restore_version_dir.remove(tenant_rem)
     print "Items in directory are %s"%os_restore_version_dir
     
+    if len(os_restore_version_dir) == 0:
+        print "There are no Valid Tenants in Version %s did you specify command line argument '-tenant NAME' may wrong tenant name?"%(int(args.version[0]),)
     #for each tenant in version list do this
     for tenant in os_restore_version_dir:
         #check if tenant exists
