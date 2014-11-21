@@ -190,7 +190,7 @@ def main (argv):
                     image_vis = get_meta_image_info(meta_json_string[0],"protected")
                     image_format = get_meta_image_info(meta_json_string[0],"disk_format")
                     image_cont_fmt = get_meta_image_info(meta_json_string[0],"container_format")
-                    print "Try create image with %s"%file_loc
+                    print "Try create image using tenant %s with %s"%(tenant,file_loc)
                     print "using data image_name %s :: image_vis %s :: image_format %s :: image cont fmt %s"%(image_name,image_vis, image_format,image_cont_fmt)
                     glance_dest.images.create(name=image_name,is_public=image_vis,disk_format=image_format,container_format=image_cont_fmt,data=fimage)
                     
