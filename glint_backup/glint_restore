@@ -158,11 +158,11 @@ def main (argv):
                 meta_file.close()
                 
                 image_id = get_meta_image_info(meta_json_string[0],"id")
-                #image_calc_meta_checksum = get_checksum(meta_json_string[0])
+                image_calc_meta_checksum = get_checksum(images[tenant][0])
                 image_meta_checksum = get_meta_image_info(meta_json_string[0],"checksum")
                 
                 
-                #print "id %s cksum %s calc cks %s data:%s"%(image_id,image_meta_checksum,image_calc_meta_checksum,meta_json_string[0])
+                print "id %s cksum %s calc cks %s data:%s"%(image_id,image_meta_checksum,image_calc_meta_checksum,meta_json_string[0])
                 
                 #check if image is the same as in glance - checksum compare
 
