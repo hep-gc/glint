@@ -134,7 +134,7 @@ def main (argv):
                 try:
                     kwargs = {'filters': {'owner': keystone_tenant.id, 'status': 'active'}}
                     images[keystone_tenant.name] = sorted(glance.images.list(**kwargs))
-                    print "Found Tenant images %s"%images
+                    #print "Found Tenant images %s"%images
                 except:
                     print 'Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name)
                     logger.error('Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name))
@@ -158,14 +158,28 @@ def main (argv):
                 meta_file.close()
                 
                 image_id = get_meta_image_info(meta_json_string[0],"id")
-                image_calc_meta_checksum = images[tenant][0]['checksum']
+                #image_calc_meta_checksum = images[tenant][0]['checksum']
                 image_meta_checksum = get_meta_image_info(meta_json_string[0],"checksum")
                 
                 
-                print "id %s cksum %s calc cks %s data:%s"%(image_id,image_meta_checksum,image_calc_meta_checksum,meta_json_string[0])
+                #print "id %s cksum %s calc cks %s data:%s"%(image_id,image_meta_checksum,image_calc_meta_checksum,meta_json_string[0])
                 
-                #check if image is the same as in glance - checksum compare
-
+                #loop through images looking for matched image id
+                found_image=False
+                glance_img=None
+                for glance_image in images[tenant]:
+                    if glance_image['id'] == image_id:
+                        print "Eureka ... found the image ... now check checksums"
+                        glance_img=glance_image
+                        #check if image is the same as in glance - checksum compare
+                        if glance_image['checksum'] == image_meta_checksum:
+                            print "Same checksum so no changes"
+                        else:
+                            print "Diff checksum so Image has changed slightly so Update Image"
+                
+                
+                if glance_img is not None:
+                    print "Need to create New Image"
                 #if checksum is different or if images does not exist,
                 #then remove old image and replace with new one
         if tenant_exists is False:
