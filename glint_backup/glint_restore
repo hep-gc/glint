@@ -169,9 +169,9 @@ def main (argv):
                 glance_img=None
                 for glance_image in images[tenant]:
                     #if glance_image['id'] == image_id:
-                    print "Check if this image is correct checksum for meta image name %s"%image_name
+                    print "For meta image name %s compare to glance image list name %s"%(image_name,glance_image['name'])
                     if glance_image['checksum'] == image_meta_checksum:
-                        print "For Tenant %s ... found the image with %s"%(tenant,glance_image['name'])
+                        #print "For Tenant %s ... found the image with %s"%(tenant,glance_image['name'])
                         glance_img=glance_image
                         #check if image is the same as in glance - checksum compare
                         #if glance_image['checksum'] == image_meta_checksum:
