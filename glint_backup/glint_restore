@@ -179,7 +179,8 @@ def main (argv):
                 
                 
                 if glance_img is None:
-                    print "Need to create New Image with %s"%metadata
+                    print "Need to create New Image with %s"%meta_json_string
+                    print "file is %s"%metadata
                     glance_ep_dest = keystone.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
                     glance_dest = glance_api.Client('1',glance_ep_dest,token=keystone.auth_token)
                     
