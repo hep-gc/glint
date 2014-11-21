@@ -13,8 +13,12 @@ class GlintArgumentParser:
         self.parser = argparse.ArgumentParser(description='Glint\'s Backup Argument Parser')
    
     def init_restore_arg_parser(self):
-        self.parser.add_argument("-version",nargs=1)
         self.parser.add_argument("-cfgfile",nargs=1)
+        self.parser.add_argument("-version",nargs=1)
+        self.parser.add_argument("-tenant",nargs=1)
+        self.parser.add_argument("-image_name",nargs=1)
+        
+        
     
     def init_backup_arg_parser(self):
         self.parser.add_argument("-cfgfile",nargs=1)    
