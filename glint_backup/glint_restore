@@ -178,7 +178,7 @@ def main (argv):
                             print "Diff checksum so Image has changed slightly so Update Image"
                 
                 
-                if glance_img is not None:
+                if glance_img is None:
                     print "Need to create New Image"
                 #if checksum is different or if images does not exist,
                 #then remove old image and replace with new one
