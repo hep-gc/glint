@@ -168,7 +168,8 @@ def main (argv):
                 found_image=False
                 glance_img=None
                 for glance_image in images[tenant]:
-                    if glance_image['id'] == image_id:
+                    #if glance_image['id'] == image_id:
+                    if glance_image['checksum'] == image_meta_checksum:
                         print "Eureka ... found the image ... now check checksums"
                         glance_img=glance_image
                         #check if image is the same as in glance - checksum compare
