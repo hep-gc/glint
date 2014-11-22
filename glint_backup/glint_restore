@@ -194,7 +194,12 @@ def main (argv):
                 #check if user specified commandline argument filtering which images to replace
                 if args.image_name is not None and args.tenant is not None and glance_img is None:
                     print "tenant and image filtering %s compare to %s"%(image_name,args.image_name[0])
-                    if image_name == args.image_name[0]:
+                    found_image=False
+                    for find_img in args.image_name:
+                        if image_name == find_img:
+                            found_image=True
+                    
+                    if found_image:
                         glance_img=None
                     else:
                         #this will prevent the image from being backed up
