@@ -16,7 +16,7 @@ class GlintArgumentParser:
         self.parser.add_argument("-cfgfile",nargs=1)
         self.parser.add_argument("-version",nargs=1)
         self.parser.add_argument("-tenant",nargs=1)
-        self.parser.add_argument("-image_name",nargs=1)
+        self.parser.add_argument("-image_name",nargs='*')
         
         
     
