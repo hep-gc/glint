@@ -29,7 +29,7 @@ def main (argv):
     print "args are %s"%args
     # Set the configuration file path.
     if args.cfgfile is not None:
-        print "set config file to %s"%args.cfgfile[0]
+        print "Glint Restore is Setting config file to %s"%args.cfgfile[0]
         config_file = args.cfgfile[0]
     else:
         config_file = '/usr/local/etc/glint/glint_backup.conf'
@@ -60,6 +60,7 @@ def main (argv):
     stdout, stderr = p.communicate()
     
     if stderr != '' or len(stdout.split()) > 1:
+        print 'Error: There is more than one glint_backup running. This one is terminating.'
         logger.error('Error: There is more than one glint_backup running. This one is terminating.')
         return 1
 
@@ -75,6 +76,7 @@ def main (argv):
             username=config['glint_backup_admin_user'],
             password=pw[:-1])
     except:
+        print 'Error: unable to connect to keystone at "%s"; terminating.'%(config['glint_backup_auth_URL'])
         logger.error('Error: unable to connect to keystone at "%s"; terminating.'%(config['glint_backup_auth_URL']))
         return 1
 
@@ -83,6 +85,7 @@ def main (argv):
         glance_endpoint = keystone.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
         glance = glance_api.Client('2',glance_endpoint,token=keystone.auth_token)
     except:
+        print 'Error: unable to connect to glance at "%s"; terminating.'%(glance_endpoint)
         logger.error('Error: unable to connect to glance at "%s"; terminating.'%(glance_endpoint))
         return 1
     print "Now for the hard work"
