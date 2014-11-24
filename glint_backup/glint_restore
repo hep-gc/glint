@@ -68,7 +68,7 @@ def main (argv):
     # Authenticate and authorize with keystone.
     p = Popen(['hiera', '-c', config['glint_backup_hiera_config'], config['glint_backup_admin_pw_key']], stdout=PIPE, stderr=PIPE)
     pw, stder = p.communicate()
-    print "Retreived PW for rd on rat of %s"%pw
+    
     try:
         keystone = keystone_api.Client(auth_url=config['glint_backup_auth_URL'],
             tenant_name=config['glint_backup_admin_tenant'],
@@ -127,9 +127,11 @@ def main (argv):
             print "Removing Tenant %s from list of version updates "%tenant_rem
             os_restore_version_dir.remove(tenant_rem)
     print "Items in directory are %s"%os_restore_version_dir
+    logger.info("Items in directory are %s"%os_restore_version_dir)
     
     if len(os_restore_version_dir) == 0:
-        print "There are no Valid Tenants in Version %s did you specify command line argument '-tenant NAME' may wrong tenant name?"%(int(args.version[0]),)
+        print "There are no Valid Tenants in Version %s did you specify command line argument '-tenant NAME' may wrong tenant name?"%(int(args.version[0]))
+        logger.info("There are no Valid Tenants in Version %s did you specify command line argument '-tenant NAME' may wrong tenant name?"%(int(args.version[0])))
     #for each tenant in version list do this
     for tenant in os_restore_version_dir:
         #check if tenant exists
@@ -156,7 +158,7 @@ def main (argv):
         #for each meta data 
         restore_versioned_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),tenant)
         if not os.path.exists(restore_versioned_tenant_dir):
-            logger.error('Previous backup directory "%s" does not exist.'%(restore_versioned_tenant_dir))
+            logger.error('Restore directory "%s" does not exist.'%(restore_versioned_tenant_dir))
             return 1
         #print "Get meta data from tenant dir at %s"%restore_versioned_tenant_dir
         os_restore_versioned_tenant_dir = os.listdir(restore_versioned_tenant_dir)
@@ -183,7 +185,7 @@ def main (argv):
                     #if glance_image['id'] == image_id:
                     print "Backup Tenant dir %s :: For meta image name %s compare to glance image list name %s"%(tenant,image_name,glance_image['name'])
                     if glance_image['checksum'] == image_meta_checksum and glance_image['name'] == image_name:
-                        print "Found match for image name %s"%(image_name)
+                        #print "Found match for image name %s"%(image_name)
                         glance_img=glance_image
                         #check if image is the same as in glance - checksum compare
                         #if glance_image['checksum'] == image_meta_checksum:
@@ -193,7 +195,7 @@ def main (argv):
                 
                 #check if user specified commandline argument filtering which images to replace
                 if args.image_name is not None and args.tenant is not None and glance_img is None:
-                    print "tenant and image filtering %s compare to %s"%(image_name,args.image_name[0])
+                    #print "tenant and image filtering %s compare to %s"%(image_name,args.image_name[0])
                     found_image=False
                     for find_img in args.image_name:
                         if image_name == find_img:
