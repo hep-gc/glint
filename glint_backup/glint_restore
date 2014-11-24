@@ -118,8 +118,19 @@ def main (argv):
         return 1
     print "The restore directory is %s"%restore_version_dir
     os_restore_version_dir = os.listdir(restore_version_dir)
-    del os_restore_version_dir[0]
-    del os_restore_version_dir[0]
+    
+    #remove the __ from the list
+    idx_rem=[]
+    for idx,entry in enumerate(os_restore_version_dir):
+        if '__' in entry:
+            print "found %s add %s to idx removals "%(entry,idx)
+            idx_rem.append(idx)
+    
+    for idx in idx_rem:
+        del os_restore_version_dir[idx]
+            
+    #del os_restore_version_dir[0]
+    #del os_restore_version_dir[0]
     
     if args.tenant is not None:
         arg_tenant = args.tenant[0]
