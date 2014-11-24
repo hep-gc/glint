@@ -124,10 +124,10 @@ def main (argv):
     for idx,entry in enumerate(os_restore_version_dir):
         if '__' in entry:
             print "found %s add %s to idx removals "%(entry,idx)
-            idx_rem.append(idx)
+            idx_rem.append(entry)
     
-    for idx in idx_rem:
-        del os_restore_version_dir[idx]
+    for entry in idx_rem:
+        os_restore_version_dir.remove(entry)
             
     #del os_restore_version_dir[0]
     #del os_restore_version_dir[0]
