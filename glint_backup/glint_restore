@@ -28,6 +28,7 @@ def main (argv):
     args = gap.parser.parse_args()
     print "args are %s"%args
     # Set the configuration file path.
+    
     if args.cfgfile is not None:
         print "Glint Restore is Setting config file to %s"%args.cfgfile[0]
         config_file = args.cfgfile[0]
@@ -60,8 +61,8 @@ def main (argv):
     stdout, stderr = p.communicate()
     
     if stderr != '' or len(stdout.split()) > 1:
-        print 'Error: There is more than one glint_backup running. This one is terminating.'
-        logger.error('Error: There is more than one glint_backup running. This one is terminating.')
+        print 'Error: There is more than one glint_restore running. This one is terminating.'
+        logger.error('Error: There is more than one glint_restore running. This one is terminating.')
         return 1
 
     logger.info('Starting.')
@@ -108,7 +109,20 @@ def main (argv):
         print "Version %s does not exist yet ;) current version is %s"%(int(args.version[0]),version_count)
         logger.error("This version %s does not exist yet ;) current max version is %s"%(int(args.version[0]),version_count) )
         return 1
-        
+    
+    if args.list_images is not None and args.tenant is not None:
+        list_version_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant)
+        images = os.listdir(list_version_tenant_dir)
+        for image in images:
+            if 'metadata' in image:
+                meta_file = open(  '%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant,image)   ,'r')
+                meta_json_string = meta_file.readlines()
+                meta_file.close()
+                
+                image_name = get_meta_image_info(meta_json_string[0],"name")
+                print "%s"%image_name
+        return 1
+    
     #once version number is identified
     #get all meta-data from the backup-repo
     #so for each tenant get meta-data of each image
