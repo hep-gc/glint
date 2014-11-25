@@ -111,11 +111,11 @@ def main (argv):
         return 1
     
     if args.list_images is not None and args.tenant is not None:
-        list_version_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant)
+        list_version_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant[0])
         images = os.listdir(list_version_tenant_dir)
         for image in images:
             if 'metadata' in image:
-                meta_file = open(  '%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant,image)   ,'r')
+                meta_file = open(  '%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant[0],image)   ,'r')
                 meta_json_string = meta_file.readlines()
                 meta_file.close()
                 
