@@ -17,7 +17,7 @@ class GlintArgumentParser:
         self.parser.add_argument("-v","--version",nargs=1,help="This Parameter is required or tool will fail")
         self.parser.add_argument("-t","--tenant",nargs=1,help="Specify a tenant directory you wish to restore, rather than all tenants of a versioning")
         self.parser.add_argument("-i","--image-name",nargs='*',help="Used with the --tenant option if you wish to restore a single image from a tenant")
-        self.parser.add_argument("-l","--list-images",action='store_true',hel="Used with --tenant to list images in a tenant at the specifed --version")
+        self.parser.add_argument("-l","--list-images",action='store_true',help="Used with --tenant to list images in a tenant at the specifed --version")
         
         
     def init_backup_arg_parser(self):
