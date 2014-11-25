@@ -129,7 +129,7 @@ def main (argv):
                     image_name = get_meta_image_info(meta_json_string[0],"name")
                     image_status = get_meta_image_info(meta_json_string[0],"status")
                     image_visibility = get_meta_image_info(meta_json_string[0],"visibility")
-                    image_format = get_meta_image_info(meta_json_string[0],"disck_format")
+                    image_format = get_meta_image_info(meta_json_string[0],"disk_format")
                     image_checksum = get_meta_image_info(meta_json_string[0],"checksum")
                     
                     row_data['id']=image_id
