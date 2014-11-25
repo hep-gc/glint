@@ -157,7 +157,7 @@ def main (argv):
             print "List Column sizes %s"%max_column_length
             print "Data array %s"%row_entries
             gl_util.print_line(max_column_length)
-                
+            gl_util.print_line_title(['id','name','status','visibility','format','checksum'])
         else:
             print "Please Specify a Tenant -t or --tenant option when listing images"
         return 1
