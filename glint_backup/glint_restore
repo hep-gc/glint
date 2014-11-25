@@ -17,6 +17,7 @@ import time
 from keystoneclient.v2_0 import client as keystone_api
 import glanceclient as glance_api
 from glintargparse import GlintArgumentParser
+import glint_print_util as gl_util
 
 # Set environment, determine if master or slave, and call the appropriate function.
 def main (argv):
@@ -155,6 +156,8 @@ def main (argv):
                     row_entries.append(row_data)
             print "List Column sizes %s"%max_column_length
             print "Data array %s"%row_entries
+            gl_util.print_line(max_column_length)
+                
         else:
             print "Please Specify a Tenant -t or --tenant option when listing images"
         return 1
