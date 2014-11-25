@@ -11,7 +11,7 @@ import logging
 import json
 import os
 from subprocess import Popen, PIPE
-import sys
+import sys,array
 import time
 
 from keystoneclient.v2_0 import client as keystone_api
@@ -29,13 +29,10 @@ def main (argv):
     print "args are %s"%args
     # Set the configuration file path.
     
-    if args.cfgfile is not None or args.c is not None:
-        if args.cfgfile is not None:
-            print "Glint Restore is Setting config file to %s"%args.cfgfile[0]
-            config_file = args.cfgfile[0]
-        else:
-            print "Glint Restore is Setting config file to %s"%args.c[0]
-            config_file = args.c[0]
+    if args.cfgfile is not None:
+        print "Glint Restore is Setting config file to %s"%args.cfgfile[0]
+        config_file = args.cfgfile[0]
+       
     else:
         config_file = '/usr/local/etc/glint/glint_backup.conf'
 
@@ -94,7 +91,7 @@ def main (argv):
         print 'Error: unable to connect to glance at "%s"; terminating.'%(glance_endpoint)
         logger.error('Error: unable to connect to glance at "%s"; terminating.'%(glance_endpoint))
         return 1
-    print "Now for the hard work"
+    #print "Now for the hard work"
     
     #check that user specified a version number and ensure it less that versions available
     # Determine previous backup directory (possibly none).
@@ -103,28 +100,63 @@ def main (argv):
     except:
         logger.error('Error: unable to retrieve the count of current backup versions. Is the backup directory ("%s") mounted?'%(config['glint_backup_dir']))
         return 1
-    print "showing version count to be %s version is %s int type version is %s"%(version_count,args.version[0],int(args.version[0]))
+    #print "showing version count to be %s version is %s int type version is %s"%(version_count,args.version[0],int(args.version[0]))
     
     if version_count == 0:
         print "No previous backups detected"
         logger.error("There are no backup version to restore from")
         return 1
     if version_count < int(args.version[0]):
-        print "Version %s does not exist yet ;) current version is %s"%(int(args.version[0]),version_count)
+        #print "Version %s does not exist yet ;) current version is %s"%(int(args.version[0]),version_count)
         logger.error("This version %s does not exist yet ;) current max version is %s"%(int(args.version[0]),version_count) )
         return 1
     
-    if args.list_images is not None and args.tenant is not None:
-        list_version_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant[0])
-        images = os.listdir(list_version_tenant_dir)
-        for image in images:
-            if 'metadata' in image:
-                meta_file = open(  '%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant[0],image)   ,'r')
-                meta_json_string = meta_file.readlines()
-                meta_file.close()
-                
-                image_name = get_meta_image_info(meta_json_string[0],"name")
-                print "%s"%image_name
+    if args.list_images is not None:
+        if args.tenant is not None:
+            max_column_length=array.array('i',(0 for i in range(0,6)))
+            
+            row_entries=[]
+            list_version_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant[0])
+            images = os.listdir(list_version_tenant_dir)
+            for image in images:
+                if 'metadata' in image:
+                    row_data = {}
+                    meta_file = open(  '%s/%04.0f/%s/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant[0],image)   ,'r')
+                    meta_json_string = meta_file.readlines()
+                    meta_file.close()
+                    
+                    image_id = get_meta_image_info(meta_json_string[0],"id")
+                    image_name = get_meta_image_info(meta_json_string[0],"name")
+                    image_status = get_meta_image_info(meta_json_string[0],"status")
+                    image_visibility = get_meta_image_info(meta_json_string[0],"visibility")
+                    image_format = get_meta_image_info(meta_json_string[0],"disck_format")
+                    image_checksum = get_meta_image_info(meta_json_string[0],"checksum")
+                    
+                    row_data['id']=image_id
+                    row_data['name']=image_name
+                    row_data['status']=image_status
+                    row_data['visibility']=image_visibility
+                    row_data['format']=image_format
+                    row_data['checksum']=image_checksum
+                    #print "%s"%image_name
+                    if len( image_id ) > max_column_length[0]:
+                        max_column_length[0] = len( image_id )
+                    if len( image_name ) > max_column_length[1]:
+                        max_column_length[1] = len( image_name )    
+                    if len( image_status ) > max_column_length[2]:
+                        max_column_length[2] = len( image_status )
+                    if len( image_visibility) > max_column_length[3]:
+                        max_column_length[3] = len( image_visibility )
+                    if len( image_format ) > max_column_length[4]:
+                        max_column_length[4] = len( image_format)
+                    if len( image_checksum) > max_column_length[5]:
+                        max_column_length[5] = len( image_checksum)
+                        
+                    row_entries.append(row_data)
+            print "List Column sizes %s"%max_column_length
+            print "Data array %s"%row_entries
+        else:
+            print "Please Specify a Tenant -t or --tenant option when listing images"
         return 1
     
     #once version number is identified
@@ -141,7 +173,7 @@ def main (argv):
     idx_rem=[]
     for idx,entry in enumerate(os_restore_version_dir):
         if '__' in entry:
-            print "found %s add %s to idx removals "%(entry,idx)
+            #print "found %s add %s to idx removals "%(entry,idx)
             idx_rem.append(entry)
     
     for entry in idx_rem:
@@ -157,7 +189,7 @@ def main (argv):
             if tenant != arg_tenant:
                 tenant_removals.append(tenant)
         for tenant_rem in tenant_removals:
-            print "Removing Tenant %s from list of version updates "%tenant_rem
+            #print "Removing Tenant %s from list of version updates "%tenant_rem
             os_restore_version_dir.remove(tenant_rem)
     print "Items in directory are %s"%os_restore_version_dir
     logger.info("Items in directory are %s"%os_restore_version_dir)
