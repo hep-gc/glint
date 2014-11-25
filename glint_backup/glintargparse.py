@@ -17,7 +17,7 @@ class GlintArgumentParser:
         self.parser.add_argument("-version",nargs=1)
         self.parser.add_argument("-tenant",nargs=1)
         self.parser.add_argument("-image_name",nargs='*')
-        self.parser.add_argument("-list_images")
+        self.parser.add_argument("-list_images",nargs=0)
         
         
     def init_backup_arg_parser(self):
