@@ -20,7 +20,6 @@ class GlintArgumentParser:
         self.parser.add_argument("-list_images")
         
         
-    
     def init_backup_arg_parser(self):
         self.parser.add_argument("-cfgfile",nargs=1)    
 
