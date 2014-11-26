@@ -323,7 +323,7 @@ def is_image_in_use(glance,keystone,tenant,image_name):
     print "check if image is in use"
     keystone_tenants = sorted(keystone.tenants.list())
     for key_ten in keystone_tenants:
-        #print "Compare key_ten %s to %s"%(key_ten.name,tenant)
+        print "Compare key_ten %s to %s"%(key_ten.name,tenant)
         if key_ten.name == tenant:
             print "Found Tenant"
             #tenant_exists=True
@@ -341,7 +341,7 @@ def is_image_in_use(glance,keystone,tenant,image_name):
                 print 'Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name)
                 logger.error('Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name))
                 return 'False Error'
-        return 'False'
+    return 'False'
 
 def get_meta_image_info(meta_data,info):
     json_obj = json.loads(meta_data)
