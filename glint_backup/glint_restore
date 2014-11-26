@@ -118,7 +118,7 @@ def main (argv):
             titles = ['version','tenant','name','format','description','in-use']
             max_column_length=[]
             for title in titles:
-                max_column_length.append( len(title)+2 )
+                max_column_length.append( len(title) )
             row_entries=[]
             list_version_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant[0])
             images = os.listdir(list_version_tenant_dir)
@@ -141,7 +141,7 @@ def main (argv):
                     if image_description is None:
                         image_description = ''
                     #image_checksum = get_meta_image_info(meta_json_string[0],"checksum")
-                    image_in_use = "True"
+                    image_in_use = is_image_in_use(glance,image_tenant,image_name)
                     
                     row_data['version']=image_version
                     row_data['tenant']=image_tenant
@@ -152,7 +152,7 @@ def main (argv):
                     row_data['format']=image_format
                     #row_data['checksum']=image_checksum
                     row_data['description']=image_description
-                    row_data['in-use']=image_in_use
+                    row_data['in-use']=is_image_in_use()
                     #print "%s"%image_name
                     if len( image_version ) > max_column_length[0]:
                         max_column_length[0] = len( image_version )
@@ -318,6 +318,8 @@ def main (argv):
             logger.error('Tenant "%s" does not exist ... ignoring image backup'%(tenant))
             
     #done
+def is_image_in_use(glance,tenant,image_name):
+    return 'True'
 
 def get_meta_image_info(meta_data,info):
     json_obj = json.loads(meta_data)
