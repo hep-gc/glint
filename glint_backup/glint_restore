@@ -27,7 +27,7 @@ def main (argv):
     gap = GlintArgumentParser()
     gap.init_restore_arg_parser()
     args = gap.parser.parse_args()
-    print "args are %s"%args
+    #print "args are %s"%args
     # Set the configuration file path.
     
     if args.cfgfile is not None:
@@ -168,8 +168,8 @@ def main (argv):
                         max_column_length[5] = len( image_in_use)
                         
                     row_entries.append(row_data)
-            print "List Column sizes %s"%max_column_length
-            print "Data array %s"%row_entries
+            #print "List Column sizes %s"%max_column_length
+            #print "Data array %s"%row_entries
             gl_util.print_line(max_column_length)
             gl_util.print_line_data(['version','tenant','name','format','description','in-use'],max_column_length)
             gl_util.print_line(max_column_length)
@@ -188,7 +188,7 @@ def main (argv):
     if not os.path.exists(restore_version_dir):
         logger.error('Previous backup directory "%s" does not exist.'%(restore_version_dir))
         return 1
-    print "The restore directory is %s"%restore_version_dir
+    #print "The restore directory is %s"%restore_version_dir
     os_restore_version_dir = os.listdir(restore_version_dir)
     
     #remove the __ from the list
@@ -213,7 +213,7 @@ def main (argv):
         for tenant_rem in tenant_removals:
             #print "Removing Tenant %s from list of version updates "%tenant_rem
             os_restore_version_dir.remove(tenant_rem)
-    print "Items in directory are %s"%os_restore_version_dir
+    #print "Items in directory are %s"%os_restore_version_dir
     logger.info("Items in directory are %s"%os_restore_version_dir)
     
     if len(os_restore_version_dir) == 0:
@@ -270,7 +270,7 @@ def main (argv):
                 glance_img=None
                 for glance_image in images[tenant]:
                     #if glance_image['id'] == image_id:
-                    print "Backup Tenant dir %s :: For meta image name %s compare to glance image list name %s"%(tenant,image_name,glance_image['name'])
+                    #print "Backup Tenant dir %s :: For meta image name %s compare to glance image list name %s"%(tenant,image_name,glance_image['name'])
                     if glance_image['checksum'] == image_meta_checksum and glance_image['name'] == image_name:
                         #print "Found match for image name %s"%(image_name)
                         glance_img=glance_image
@@ -295,8 +295,8 @@ def main (argv):
                         glance_img=""
                 
                 if glance_img is None:
-                    print "Need to create New Image with %s"%meta_json_string
-                    print "file is %s"%metadata
+                    #print "Need to create New Image with %s"%meta_json_string
+                    #print "file is %s"%metadata
                     glance_ep_dest = keystone.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
                     glance_dest = glance_api.Client('1',glance_ep_dest,token=keystone.auth_token)
                     
@@ -306,8 +306,8 @@ def main (argv):
                     image_vis = get_meta_image_info(meta_json_string[0],"protected")
                     image_format = get_meta_image_info(meta_json_string[0],"disk_format")
                     image_cont_fmt = get_meta_image_info(meta_json_string[0],"container_format")
-                    print "Try create image using tenant %s with %s"%(tenant,file_loc)
-                    print "using data image_name %s :: image_vis %s :: image_format %s :: image cont fmt %s :: owner %s"%(image_name,image_vis, image_format,image_cont_fmt,keystone_tenant.id)
+                    #print "Try create image using tenant %s with %s"%(tenant,file_loc)
+                    #print "using data image_name %s :: image_vis %s :: image_format %s :: image cont fmt %s :: owner %s"%(image_name,image_vis, image_format,image_cont_fmt,keystone_tenant.id)
                     glance_dest.images.create(name=image_name,is_public=image_vis,disk_format=image_format,container_format=image_cont_fmt,owner=keystone_tenant.id,data=fimage)
                     
                     
