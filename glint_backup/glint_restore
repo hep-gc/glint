@@ -126,41 +126,50 @@ def main (argv):
                     meta_json_string = meta_file.readlines()
                     meta_file.close()
                     
-                    image_id = get_meta_image_info(meta_json_string[0],"id")
+                    image_version = args.version[0]
+                    image_tenant = args.tenant[0]
+                    #image_id = get_meta_image_info(meta_json_string[0],"id")
                     image_name = get_meta_image_info(meta_json_string[0],"name")
-                    image_status = get_meta_image_info(meta_json_string[0],"status")
-                    image_visibility = get_meta_image_info(meta_json_string[0],"visibility")
-                    image_format = get_meta_image_info(meta_json_string[0],"disk_format")
-                    image_checksum = get_meta_image_info(meta_json_string[0],"checksum")
+                    #image_status = get_meta_image_info(meta_json_string[0],"status")
+                    #image_visibility = get_meta_image_info(meta_json_string[0],"visibility")
                     
-                    row_data['id']=image_id
+                    image_format = get_meta_image_info(meta_json_string[0],"disk_format")
+                    image_description = get_meta_image_info(meta_json_string[0],"description")
+                    #image_checksum = get_meta_image_info(meta_json_string[0],"checksum")
+                    image_in_use = "True"
+                    
+                    row_data['version']=image_version
+                    row_data['tenant']=image_tenant
+                    #row_data['id']=image_id
                     row_data['name']=image_name
-                    row_data['status']=image_status
-                    row_data['visibility']=image_visibility
+                    #row_data['status']=image_status
+                    #row_data['visibility']=image_visibility
                     row_data['format']=image_format
-                    row_data['checksum']=image_checksum
+                    #row_data['checksum']=image_checksum
+                    row_data['description']=image_description
+                    row_data['in-use']=image_in_use
                     #print "%s"%image_name
-                    if len( image_id ) > max_column_length[0]:
-                        max_column_length[0] = len( image_id )
-                    if len( image_name ) > max_column_length[1]:
-                        max_column_length[1] = len( image_name )    
-                    if len( image_status ) > max_column_length[2]:
-                        max_column_length[2] = len( image_status )
-                    if len( image_visibility) > max_column_length[3]:
-                        max_column_length[3] = len( image_visibility )
-                    if len( image_format ) > max_column_length[4]:
-                        max_column_length[4] = len( image_format)
-                    if len( image_checksum) > max_column_length[5]:
-                        max_column_length[5] = len( image_checksum)
+                    if len( image_version ) > max_column_length[0]:
+                        max_column_length[0] = len( image_version )
+                    if len( image_tenant ) > max_column_length[1]:
+                        max_column_length[1] = len( image_tenant )    
+                    if len( image_name ) > max_column_length[2]:
+                        max_column_length[2] = len( image_name )
+                    if len( image_format) > max_column_length[3]:
+                        max_column_length[3] = len( image_format )
+                    if len( image_description ) > max_column_length[4]:
+                        max_column_length[4] = len( image_description)
+                    if len( image_in_use) > max_column_length[5]:
+                        max_column_length[5] = len( image_in_use)
                         
                     row_entries.append(row_data)
             print "List Column sizes %s"%max_column_length
             print "Data array %s"%row_entries
             gl_util.print_line(max_column_length)
-            gl_util.print_line_data(['id','name','status','visibility','format','checksum'],max_column_length)
+            gl_util.print_line_data(['version','tenant','name','format','description','in-use'],max_column_length)
             gl_util.print_line(max_column_length)
             for row in row_entries:
-                gl_util.print_line_data([row['id'],row['name'],row['status'],row['visibility'],row['format'],row['checksum']],max_column_length)
+                gl_util.print_line_data([row['version'],row['tenant'],row['name'],row['format'],row['description'],row['in-use']],max_column_length)
             gl_util.print_line(max_column_length)
             
         else:
