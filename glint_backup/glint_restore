@@ -333,7 +333,7 @@ def is_image_in_use(glance,keystone,tenant,image_name):
                 for image in images:
                     if image['name'] == image_name:
                         return 'True'
-                    #print "Compare %s to %s"%(image,image_name)
+                    print "Compare %s to %s"%(image,image_name)
             except:
                 print 'Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name)
                 logger.error('Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name))
