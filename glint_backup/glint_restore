@@ -141,7 +141,7 @@ def main (argv):
                     if image_description is None:
                         image_description = ''
                     #image_checksum = get_meta_image_info(meta_json_string[0],"checksum")
-                    image_in_use = is_image_in_use(glance,image_tenant,image_name)
+                    image_in_use = is_image_in_use(glance,keystone,image_tenant,image_name)
                     
                     row_data['version']=image_version
                     row_data['tenant']=image_tenant
@@ -319,8 +319,23 @@ def main (argv):
             
     #done
 
-def is_image_in_use(glance,tenant,image_name):
-    return 'True'
+def is_image_in_use(glance,keystone,tenant,image_name):
+    keystone_tenants = sorted(keystone.tenants.list())
+    for key_ten in keystone_tenants:
+        #print "Compare key_ten %s to %s"%(key_ten.name,tenant)
+        if key_ten.name == tenant:
+            tenant_exists=True
+            keystone_tenant=key_ten
+            try:
+                kwargs = {'filters': {'owner': keystone_tenant.id, 'status': 'active'}}
+                images = sorted(glance.images.list(**kwargs))
+                #print "Found Tenant images %s"%images
+                for image in images:
+                    print "Compare %s to %s"%(image,image_name)
+            except:
+                print 'Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name)
+                logger.error('Error: unable to retrieve image list for tenant "%s"; terminating.'%(keystone_tenant.name))
+                return 'False Error'
 
 def get_meta_image_info(meta_data,info):
     json_obj = json.loads(meta_data)
