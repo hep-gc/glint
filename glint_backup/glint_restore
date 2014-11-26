@@ -114,8 +114,11 @@ def main (argv):
     
     if args.list_images is not None:
         if args.tenant is not None:
-            max_column_length=array.array('i',(0 for i in range(0,6)))
-            
+            #max_column_length=array.array('i',(0 for i in range(0,6)))
+            titles = ['version','tenant','name','format','description','in-use']
+            max_column_length=[]
+            for title in tiles:
+                max_column_length.append( len(title)+2 )
             row_entries=[]
             list_version_tenant_dir = '%s/%04.0f/%s'%(config['glint_backup_dir'],int(args.version[0]),args.tenant[0])
             images = os.listdir(list_version_tenant_dir)
