@@ -171,7 +171,7 @@ def main (argv):
             #print "List Column sizes %s"%max_column_length
             #print "Data array %s"%row_entries
             gl_util.print_line(max_column_length)
-            gl_util.print_line_data(['version','tenant','name','format','description','in-use'],max_column_length)
+            gl_util.print_line_data(['version','tenant','name','format','description','in-repo'],max_column_length)
             gl_util.print_line(max_column_length)
             for row in row_entries:
                 gl_util.print_line_data([row['version'],row['tenant'],row['name'],row['format'],row['description'],row['in-use']],max_column_length)
