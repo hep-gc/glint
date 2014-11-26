@@ -323,7 +323,7 @@ def is_image_in_use(glance,keystone,tenant,image_name):
     print "check if image is in use"
     keystone_tenants = sorted(keystone.tenants.list())
     for key_ten in keystone_tenants:
-        print "Compare key_ten %s to %s"%(key_ten.name,tenant)
+        #print "Compare key_ten %s to %s"%(key_ten.name,tenant)
         if key_ten.name == tenant:
             print "Found Tenant"
             #tenant_exists=True
@@ -331,7 +331,7 @@ def is_image_in_use(glance,keystone,tenant,image_name):
             try:
                 kwargs = {'filters': {'owner': keystone_tenant.id, 'status': 'active'}}
                 images = sorted(glance.images.list(**kwargs))
-                print "Found Tenant images %s"%images
+                #print "Found Tenant images %s"%images
                 for image in images:
                     print "Compare %s to %s"%(image,image_name)
                     if image['name'] == image_name:
