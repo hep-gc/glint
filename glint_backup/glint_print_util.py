@@ -13,6 +13,10 @@ def print_line_data(data,cols):
     ln=[]
     for idx,d in enumerate(data):
         ln.append(  (cols[idx]-len(d)) /2 )
+        if (  (cols[idx]-len(d)) % 2 ) == 0:
+            ln.append(  (cols[idx]-len(d)) /2 )
+        else:
+            ln.append(  (cols[idx]-len(d)) /2 ) +1
 
-    print "|%s%s%s|%s%s%s|%s%s%s|%s%s%s|%s%s%s|%s%s%s|"%(' '*ln[0],data[0],' '*ln[0],' '*ln[1],data[1],' '*ln[1],' '*ln[2],data[2],' '*ln[2],' '*ln[3],data[3],' '*ln[3],' '*ln[4],data[4],' '*ln[4],' '*ln[5],data[5],' '*ln[5])
+    print "|%s%s%s|%s%s%s|%s%s%s|%s%s%s|%s%s%s|%s%s%s|"%(' '*ln[0],data[0],' '*ln[1],' '*ln[2],data[1],' '*ln[3],' '*ln[4],data[2],' '*ln[5],' '*ln[6],data[3],' '*ln[7],' '*ln[8],data[4],' '*ln[9],' '*ln[10],data[5],' '*ln[11])
     
