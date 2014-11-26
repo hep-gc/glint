@@ -112,7 +112,7 @@ def main (argv):
         logger.error("This version %s does not exist yet ;) current max version is %s"%(int(args.version[0]),version_count) )
         return 1
     
-    if args.list_images is not None:
+    if args.list_images is True :
         if args.tenant is not None:
             #max_column_length=array.array('i',(0 for i in range(0,6)))
             titles = ['version','tenant','name','format','description','in-use']
@@ -320,7 +320,7 @@ def main (argv):
     #done
 
 def is_image_in_use(glance,keystone,tenant,image_name):
-    print "check if image is in use"
+    print "check if image %s is in use"%image_name
     keystone_tenants = sorted(keystone.tenants.list())
     for key_ten in keystone_tenants:
         #print "Compare key_ten %s to %s"%(key_ten.name,tenant)
