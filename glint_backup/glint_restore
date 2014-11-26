@@ -152,7 +152,7 @@ def main (argv):
                     row_data['format']=image_format
                     #row_data['checksum']=image_checksum
                     row_data['description']=image_description
-                    row_data['in-use']=is_image_in_use()
+                    row_data['in-use']=image_in_use
                     #print "%s"%image_name
                     if len( image_version ) > max_column_length[0]:
                         max_column_length[0] = len( image_version )
@@ -318,6 +318,7 @@ def main (argv):
             logger.error('Tenant "%s" does not exist ... ignoring image backup'%(tenant))
             
     #done
+
 def is_image_in_use(glance,tenant,image_name):
     return 'True'
 
