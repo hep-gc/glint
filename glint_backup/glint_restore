@@ -135,6 +135,8 @@ def main (argv):
                     
                     image_format = get_meta_image_info(meta_json_string[0],"disk_format")
                     image_description = get_meta_image_info(meta_json_string[0],"description")
+                    if image_description is None:
+                        image_description = ''
                     #image_checksum = get_meta_image_info(meta_json_string[0],"checksum")
                     image_in_use = "True"
                     
@@ -158,7 +160,7 @@ def main (argv):
                     if len( image_format) > max_column_length[3]:
                         max_column_length[3] = len( image_format )
                     if len( image_description ) > max_column_length[4]:
-                        max_column_length[4] = len( image_description)
+                        max_column_length[4] = len( image_description )
                     if len( image_in_use) > max_column_length[5]:
                         max_column_length[5] = len( image_in_use)
                         
