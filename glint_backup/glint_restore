@@ -73,7 +73,7 @@ def main (argv):
     p = Popen(['hiera', '-c', config['glint_backup_hiera_config'], config['glint_backup_admin_pw_key']], stdout=PIPE, stderr=PIPE)
     pw, stder = p.communicate()
     
-    print "PW for %s is %s error is %s"%(config['glint_backup_admin_pw_key'],pw[:-1],stder)
+    #print "PW for %s is %s error is %s"%(config['glint_backup_admin_pw_key'],pw[:-1],stder)
     try:
         keystone = keystone_api.Client(auth_url=config['glint_backup_auth_URL'],
             tenant_name=config['glint_backup_admin_tenant'],
@@ -320,16 +320,18 @@ def main (argv):
     #done
 
 def is_image_in_use(glance,keystone,tenant,image_name):
+    print "check if image is in use"
     keystone_tenants = sorted(keystone.tenants.list())
     for key_ten in keystone_tenants:
         #print "Compare key_ten %s to %s"%(key_ten.name,tenant)
         if key_ten.name == tenant:
-            tenant_exists=True
+            print "Found Tenant"
+            #tenant_exists=True
             keystone_tenant=key_ten
             try:
                 kwargs = {'filters': {'owner': keystone_tenant.id, 'status': 'active'}}
                 images = sorted(glance.images.list(**kwargs))
-                #print "Found Tenant images %s"%images
+                print "Found Tenant images %s"%images
                 for image in images:
                     print "Compare %s to %s"%(image,image_name)
                     if image['name'] == image_name:
