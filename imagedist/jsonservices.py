@@ -266,7 +266,7 @@ class imagecopyhandler():
             
             file_loc='%s%s'%(directory,self.img_name)
             fimage = open(file_loc)
-            glance_dest.images.create(name=self.img_name,is_public="False",disk_format=self.disk_format,container_format=self.container_format,owner=tenant,data=fimage)
+            glance_dest.images.create(name=self.img_name,is_public="False",disk_format=self.disk_format,container_format=self.container_format,owner=self.remote_tenent,data=fimage)
             
             print "done update with data upload"
             
