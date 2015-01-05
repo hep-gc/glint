@@ -33,7 +33,7 @@ def _get_images(keystone):
 @csrf_exempt
 def getImages(request):
     try:
-        keystone = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        keystone = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         print "keystone info %s"%keystone.auth_tenant_id
         ret_obj = {}
         ret_obj['rows']=[]
@@ -64,7 +64,7 @@ def getImages(request):
         for cred in creds:
             try:
                 #print "Try to Create Keystone Client using un:%s pw:%s ten:%s auth_url: %s:%s/v2.0"%(cred.un,cred.pw,cred.tenent,cred.site.url,cred.site.authport)
-                _keystone_ = ksclient.Client(username=cred.un,password=cred.pw,tenant_name=cred.tenent,auth_url="%s:%s/v2.0"%(cred.site.url,cred.site.authport))
+                _keystone_ = ksclient.Client(insecure=True,username=cred.un,password=cred.pw,tenant_name=cred.tenent,auth_url="%s:%s/v2.0"%(cred.site.url,cred.site.authport))
                 #print "Success"
                 images = _get_images(_keystone_)
                 sites.append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent)})
@@ -145,7 +145,7 @@ class imageremovehandler():
                 print "now generate credentials"
                 cred = credential.objects.filter(user=user_name,site=src_site_name,tenent=self.jsonMsgObj['image_src_tenent'])
                 print "now get keystoe client"
-                keystone_src = ksclient.Client(auth_url="%s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
             print "now create service ep"
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_src = savi_fix(keystone_src,glance_ep_src)
@@ -214,7 +214,7 @@ class imagecopyhandler():
             keystone_src=''
             if self.source_site ==_root_site:
                 #print "copy from Rat is source"
-                keystone_src = ksclient.Client(token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
+                keystone_src = ksclient.Client(insecure=True,token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
             else:
                 src_site_name = site.objects.filter(name=self.source_site)
                 user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
@@ -222,7 +222,7 @@ class imagecopyhandler():
                 cred = credential.objects.filter(user=user_name,site=src_site_name,tenent=self.source_tenent)
                 print "copy from other %s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport)
                 print "using creds %s:%s,%s"%(cred[0].un,cred[0].pw,cred[0].tenent)
-                keystone_src = ksclient.Client(auth_url="%s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
             
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_src = savi_fix(keystone_src,glance_ep_src) 
@@ -247,18 +247,18 @@ class imagecopyhandler():
             print "error occurred on download ignore"       
        
         try:
-            print "Create Image Remote UPLOAD %s,%s,%s to %s"%(self.disk_format,self.container_format,self.img_name,self.remote_site)
+            print "Create Image Remote Upload %s,%s,%s to %s"%(self.disk_format,self.container_format,self.img_name,self.remote_site)
             
             keystone_dest=''
             if self.remote_site ==_root_site:
                 print "copy to Rat is dest"
-                keystone_dest = ksclient.Client(token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
+                keystone_dest = ksclient.Client(insecure=True,token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
             else:
                 remote_site_name = site.objects.filter(name=self.remote_site)
                 user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
                 
                 cred = credential.objects.filter(user=user_name,site=remote_site_name,tenent=self.remote_tenent)
-                keystone_dest = ksclient.Client(auth_url="%s:%s/v2.0"%(remote_site_name[0].url,remote_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                keystone_dest = ksclient.Client(insecure=True,auth_url="%s:%s/v2.0"%(remote_site_name[0].url,remote_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
                 
             glance_ep_dest = keystone_dest.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_dest = savi_fix(keystone_dest,glance_ep_dest)
@@ -280,7 +280,7 @@ class imagecopyhandler():
 def save(request):
     try:
         jsonMsg = request.POST['jsonMsg']
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         
         jsonMsgObj = json.loads(jsonMsg)
        
@@ -310,7 +310,7 @@ def save(request):
 @csrf_exempt
 def credentials(request):
     try:
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         return HttpResponse("credentials: user is valid")
@@ -324,7 +324,7 @@ class Object(object):
 def listsites(request):
     print "try to list sites-oK"
     try:
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         s = site.objects.filter()
         
         response = []
@@ -340,7 +340,7 @@ def listsites(request):
 @csrf_exempt
 def deletesite(request):
     try:
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_id = request.POST['SITE_ID']
@@ -358,7 +358,7 @@ def deletesite(request):
 @csrf_exempt
 def createsite(request):
     try:
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_data = eval(request.POST['SITEDATA'])
@@ -404,7 +404,7 @@ def deletecredential(request):
     try:
         print "Try to Remove Credential with %s"%request.POST['USER_TOKEN']
         #print "check if request is valid, then check if user has a credential for this site"
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         print ""
         site_id = request.POST['SITE_ID']
@@ -434,7 +434,7 @@ def deletecredential(request):
 def getcredential(request):
     try:
         #print "check if request is valid, then check if user has a credential for this site"
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         site_id = request.POST['SITE_ID']
         user_name = request.POST['USER_ID']
@@ -467,7 +467,7 @@ def getcredential(request):
 def hascredential(request):
     try:
         #print "check if request is valid, then check if user has a credential for this site"
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         site_id = request.POST['SITE_ID']
         user_name = request.POST['USER_ID']
@@ -514,7 +514,7 @@ def hascredential(request):
 def addcredential(request):
     try:
         #print "try to add credential"
-        os_user = ksclient.Client(token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
+        os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         cred_data = eval(request.POST['CREDDATA'])
            
