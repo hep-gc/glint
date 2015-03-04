@@ -2,10 +2,9 @@
 
 ## Components and Licensing
 
-The Glint service and (OpenStack Horizon) dashboard modifications are written in python and uses the OpenStach Keystone and Glance APIs together with the WebObj and Paste python frameworks.
+The Glint service and (OpenStack Horizon) dashboard modifications are written in python and uses the OpenStack Keystone and Glance APIs together with the WebOb library and Paste python frameworks.
   * Version 2.6 or greater of the Python runtime environment and standard libraries. Licence: http://docs.python.org/2/license.html
   * Paste, license: MIT
-  * WebObj ???  
   * Glint, developed at the University of Victoria, License: http://www.apache.org/licenses/LICENSE-2.0  
 
 ### Versioning
