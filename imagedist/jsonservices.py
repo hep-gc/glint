@@ -26,7 +26,7 @@ def savi_fix(keystone,glance_ep):
 def _get_images(keystone):
     glance_ep = keystone.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
     glance_ep = savi_fix(keystone,glance_ep)
-    glance = glanceclient.Client('1',glance_ep,token=keystone.auth_token)
+    glance = glanceclient.Client('1',glance_ep,token=keystone.auth_token,insecure=True)
     images = glance.images.list()
     return images
         
@@ -149,7 +149,7 @@ class imageremovehandler():
             print "now create service ep"
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_src = savi_fix(keystone_src,glance_ep_src)
-            glance_src = glanceclient.Client('1',glance_ep_src,token=keystone_src.auth_token)
+            glance_src = glanceclient.Client('1',glance_ep_src,token=keystone_src.auth_token,insecure=True)
             print "now list images"
             images = glance_src.images.list()
     #image = images.find()
@@ -226,7 +226,7 @@ class imagecopyhandler():
             
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_src = savi_fix(keystone_src,glance_ep_src) 
-            glance_src = glanceclient.Client('1',glance_ep_src,token=keystone_src.auth_token)
+            glance_src = glanceclient.Client('1',glance_ep_src,token=keystone_src.auth_token,insecure=True)
             
             images = glance_src.images.list()
             img_id=''
@@ -262,7 +262,7 @@ class imagecopyhandler():
                 
             glance_ep_dest = keystone_dest.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_dest = savi_fix(keystone_dest,glance_ep_dest)
-            glance_dest = glanceclient.Client('1',glance_ep_dest,token=keystone_dest.auth_token)
+            glance_dest = glanceclient.Client('1',glance_ep_dest,token=keystone_dest.auth_token,insecure=True)
             
             file_loc='%s%s'%(directory,self.img_name)
             fimage = open(file_loc)
