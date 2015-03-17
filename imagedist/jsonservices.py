@@ -64,7 +64,7 @@ def getImages(request):
         for cred in creds:
             try:
                 #print "Try to Create Keystone Client using un:%s pw:%s ten:%s auth_url: %s:%s/v2.0"%(cred.un,cred.pw,cred.tenent,cred.site.url,cred.site.authport)
-                _keystone_ = ksclient.Client(insecure=True,username=cred.un,password=cred.pw,tenant_name=cred.tenent,auth_url="%s:%s/v2.0"%(cred.site.url,cred.site.authport))
+                _keystone_ = ksclient.Client(insecure=True,username=cred.un,password=cred.pw,tenant_name=cred.tenent,auth_url="%s:%s/%s"%(cred.site.url,cred.site.authport,cred.site.version))
                 #print "Success"
                 images = _get_images(_keystone_)
                 sites.append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent)})
@@ -145,7 +145,7 @@ class imageremovehandler():
                 print "now generate credentials"
                 cred = credential.objects.filter(user=user_name,site=src_site_name,tenent=self.jsonMsgObj['image_src_tenent'])
                 print "now get keystoe client"
-                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(src_site_name[0].url,src_site_name[0].authport,src_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
             print "now create service ep"
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_src = savi_fix(keystone_src,glance_ep_src)
@@ -220,9 +220,9 @@ class imagecopyhandler():
                 user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
                 
                 cred = credential.objects.filter(user=user_name,site=src_site_name,tenent=self.source_tenent)
-                print "copy from other %s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport)
+                print "copy from other %s:%s/%s"%(src_site_name[0].url,src_site_name[0].authport,src_site_name[0].version)
                 print "using creds %s:%s,%s"%(cred[0].un,cred[0].pw,cred[0].tenent)
-                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/v2.0"%(src_site_name[0].url,src_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(src_site_name[0].url,src_site_name[0].authport,src_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
             
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_src = savi_fix(keystone_src,glance_ep_src) 
@@ -258,7 +258,7 @@ class imagecopyhandler():
                 user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
                 
                 cred = credential.objects.filter(user=user_name,site=remote_site_name,tenent=self.remote_tenent)
-                keystone_dest = ksclient.Client(insecure=True,auth_url="%s:%s/v2.0"%(remote_site_name[0].url,remote_site_name[0].authport),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                keystone_dest = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(remote_site_name[0].url,remote_site_name[0].authport,remote_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
                 
             glance_ep_dest = keystone_dest.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_dest = savi_fix(keystone_dest,glance_ep_dest)
