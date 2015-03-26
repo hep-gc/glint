@@ -1,0 +1,10 @@
+2015-03-26 10:59:53,502 - glint_api - INFO - Create glint api logger at glint g_log.log
+2015-03-26 10:59:53,504 - glint_api - INFO - loaded glint api cfg file, glint service at http://localhost:9494
+2015-03-26 10:59:53,504 - glint_api - INFO - loaded glint api cfg file, auth url at http://localhost:5000/v2.0
+2015-03-26 10:59:53,504 - glint_api - INFO - Created glint api
+2015-03-26 11:00:20,629 - glint_api - INFO - Create glint api logger at glint g_log.log
+2015-03-26 11:00:20,630 - glint_api - INFO - loaded glint api cfg file, glint service at http://localhost:9494
+2015-03-26 11:00:20,631 - glint_api - INFO - loaded glint api cfg file, auth url at http://localhost:5000/v2.0
+2015-03-26 11:00:20,631 - glint_api - INFO - Created glint api
+2015-03-26 11:08:06,986 - glint_api - DEBUG - Configuring glint api with http://localhost:9494:http://localhost:5000/v2.0:glinttester:bhreagh:glinttester
+2015-03-26 11:35:20,815 - glint_api - DEBUG - Configuring glint api with http://localhost:9494:http://localhost:5000/v2.0:glinttester:bhreagh:fff30c2c8d5c4d00a149ba4bfdac0835

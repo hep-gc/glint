@@ -1,0 +1,10 @@
+'''
+Created on Mar 26, 2015
+
+@author: ronaldjosephdesmarais
+'''
+import api.glint_api as g_api
+import logging
+
+api = g_api.glint_api('g_log.log',logging.DEBUG,'glint_api_cfg.yaml')
+
