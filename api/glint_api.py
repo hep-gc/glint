@@ -34,7 +34,7 @@ class glint_api(object):
     def getImages(self):
         self.log.debug("getImages ")
         #create web call and wait for return
-        data_json = requests.post("%slistsites/"%self.glint_url,data={"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text
+        data_json = requests.post("%s/listsites/"%self.glint_url,data={"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text
         data_obj = json.loads(data_json)
         self.log.debug("Get Images returned %s"%data_obj)
         return data_obj
