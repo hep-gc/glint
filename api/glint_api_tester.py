@@ -8,4 +8,7 @@ import logging
 
 api = g_api.glint_api('g_log.log',logging.DEBUG,'glint_api_cfg.yaml')
 
-api.getImages()
+print "Get Images"
+images = api.getImages()
+print images
+print "----------"
