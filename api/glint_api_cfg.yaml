@@ -4,5 +4,6 @@ glint_url: http://localhost:9494
 keystone_un: glinttester
 keystone_pw: bhreagh
 keystone_tenant_id: fff30c2c8d5c4d00a149ba4bfdac0835
+keystone_tenant_name: glinttester
 
 
