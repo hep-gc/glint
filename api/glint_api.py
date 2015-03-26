@@ -28,7 +28,7 @@ class glint_api(object):
         
         #use keystone client un and pw to get an auth token 
         keystone = ksclient.Client(auth_url=self.auth_url, username=self.un, password=self.pw, tenant_id=self.tenant_id)
-        self.token = keystone.auth_ref['token']['id']
+        self.token = str(keystone.auth_ref['token']['id'])
         self.log.debug("Received token %s"%self.token)
         
     def getImages(self):
