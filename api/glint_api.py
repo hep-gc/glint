@@ -32,15 +32,9 @@ class glint_api(object):
         self.log.debug("Received token %s"%self.token)
         
     def getImages(self):
-        self.log.debug("getImages  from %s"%( "%s/listsites/"%self.glint_url))
-        #"%s/listsites/"%self.glint_url
-        data={"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name}
-        self.log.debug("data :%s:"%data)
-        #create web call and wait for return
+        self.log.debug("getImages  from %s"%( "%s/imagedistribution/"%self.glint_url))
         data_json = requests.post("%s/imagedistribution/"%self.glint_url,data={"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
-        self.log.debug(data_json)
         data_obj = json.loads(data_json)
-        self.log.debug("Get Images returned %s"%data_obj)
         return data_obj
 
     def save(self,jsonMsg, USER_TOKEN, USER_TENANT):
@@ -49,8 +43,11 @@ class glint_api(object):
     def credentials(self,USER_TOKEN, USER_TENANT, USER_ID):
         return USER_TOKEN, USER_TENANT, USER_ID
 
-    def listSites(self,USER_TOKEN, USER_TENANT):
-        return USER_TOKEN, USER_TENANT
+    def listSites(self):
+        self.log.debug("getImages  from %s"%( "%s/listsites/"%self.glint_url))
+        data_json = requests.post("%s/listsites/"%self.glint_url,data={"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
+        data_obj = json.loads(data_json)
+        return data_obj
 
     def deleteSite(self,USER_TOKEN, USER_TENANT, USER_ID, SITE_ID):
         return USER_TOKEN, USER_TENANT, USER_ID, SITE_ID

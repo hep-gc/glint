@@ -12,3 +12,7 @@ print "Get Images"
 images = api.getImages()
 print images
 print "----------"
+print "List Sites"
+sites = api.listSites()
+print sites
+print "----------"
