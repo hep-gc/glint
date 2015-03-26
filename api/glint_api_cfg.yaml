@@ -1,4 +1,4 @@
-auth_url: http://localhost:5000/v2.0
+auth_url: http://127.0.0.1:5000/v2.0
 glint_url: http://localhost:9494/image_dist
 
 keystone_un: glinttester
