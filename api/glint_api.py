@@ -56,6 +56,7 @@ class glint_api(object):
         self.log.debug("create site %s :: %s :: %s"%(name,url,formatt))
         site_data={'url':url,'name':name,'disk_format':formatt}
         data_json = requests.post("%s/createsite/"%self.glint_url,data={"SITEDATA":json.dumps(site_data),"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
+        self.log.debug(data_json)
         data_obj = json.loads(data_json)
         return data_obj
 
