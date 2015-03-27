@@ -356,8 +356,12 @@ def deletesite(request):
             s.delete()
         else:
             return HttpResponse(json.dumps({"Result","sites: site deleted %s"%site_id}))
-        print "Must have creds %s "%str(cred)
-        return HttpResponse(json.dumps({"Result":"site credentials still exist, so delete failed","creds":str(cred)}))
+        
+        #json.dumps(c, default=lambda o: o.__dict__)
+        cred_s=json.dumps(cred, default=lambda o: o.__dict__)
+        #print "Must have creds %s "%str(cred)
+        
+        return HttpResponse(json.dumps({"Result":"site credentials still exist, so delete failed","creds":cred_s}))
     except:
         return HttpResponse(json.dumps({"Result":"Invalid Credentials Who knows"}))
     
