@@ -347,20 +347,19 @@ def deletesite(request):
         
         s=site.objects.filter(pk=site_id)
         print "Filter credentials for site %s"%s
-        cred = credential.objects.filter(site=s[0])
-        
+        cred = credential.objects.filter(site=s)
+        print "Creds %s"%cred
         if len(cred) == 0:
         #print "create site with %s"%site_data
             #s=site.objects.filter(pk=site_id)
+            print "Delete Site"
             s.delete()
         else:
             return HttpResponse(json.dumps({"Result","sites: site deleted %s"%site_id}))
-        #s=site(name=site_data['name'],url=site_data['url'],authport=site_data['port'],type=site_data['disk_format'])
-        #s.save()
-        #print "create site complete"
+        print "Must have creds"
         return HttpResponse(json.dumps({"Result","%s has credentials still, so delete failed"%site_id}))
     except:
-        return HttpResponse(json.dumps({"Result":"Invalid Credentials"}))
+        return HttpResponse(json.dumps({"Result":"Invalid Credentials Who knows"}))
     
     
 @csrf_exempt
