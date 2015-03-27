@@ -362,8 +362,8 @@ def deletesite(request):
         print "Must have creds %s "%cred_s
         
         return HttpResponse(json.dumps({"Result":"site credentials still exist, so delete failed","creds":cred_s}))
-    except:
-        return HttpResponse(json.dumps({"Result":"Invalid Credentials Who knows"}))
+    except Exception as e:
+        return HttpResponse(json.dumps({"Result":"Invalid Credentials Who knows %s"%e}))
     
     
 @csrf_exempt
