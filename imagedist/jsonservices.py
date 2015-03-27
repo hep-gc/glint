@@ -9,6 +9,8 @@ from django.views.decorators.csrf import csrf_exempt
 from imagedist.models import site,credential
 from imagedist.models import user
 
+from django.forms.models import model_to_dict
+
 import json,datetime,threading,time,os,sys,re
 
 stream = open("glint_services.yaml", 'r')
@@ -358,10 +360,10 @@ def deletesite(request):
             return HttpResponse(json.dumps({"Result","sites: site deleted %s"%site_id}))
         
         #json.dumps(c, default=lambda o: o.__dict__)
-        cred_s=json.dumps(cred.__dict__())
-        print "Must have creds %s "%cred_s
+        cred_dict=model_to_dict(cred)
+        print "Must have creds %s "%cred_dict
         
-        return HttpResponse(json.dumps({"Result":"site credentials still exist, so delete failed","creds":cred_s}))
+        return HttpResponse(json.dumps({"Result":"site credentials still exist, so delete failed","creds":cred_dict}))
     except Exception as e:
         return HttpResponse(json.dumps({"Result":"Invalid Credentials Who knows %s"%e}))
     
