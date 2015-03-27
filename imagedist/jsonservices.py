@@ -344,15 +344,21 @@ def deletesite(request):
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         user_name=request.POST['USER_ID']
         site_id = request.POST['SITE_ID']
+        
+        cred = credential.objects.filter(site=site_id)
+        
+        if len(cred) == 0:
         #print "create site with %s"%site_data
-        s=site.objects.filter(pk=site_id)
-        s.delete()
+            s=site.objects.filter(pk=site_id)
+            s.delete()
+        else:
+            return HttpResponse(json.dumps({"Result","sites: site deleted %s"%site_id}))
         #s=site(name=site_data['name'],url=site_data['url'],authport=site_data['port'],type=site_data['disk_format'])
         #s.save()
         #print "create site complete"
-        return HttpResponse("sites: site deleted %s"%site_id)
+        return HttpResponse(json.dumps({"Result","%s has credentials delete failed"%site_id}))
     except:
-        return HttpResponse("Invalid Credentials")
+        return HttpResponse(json.dumps({"Result":"Invalid Credentials"}))
     
     
 @csrf_exempt
