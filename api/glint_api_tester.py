@@ -20,3 +20,8 @@ print "Create Site"
 opres = api.createSite('Rateroni', 'http://rat01.heprc.uvic.ca:5000/v2.0', 'Openstack')
 print opres
 print "----------"
+print "Delete Site"
+opres = api.deleteSite('Rateroni', 'http://rat01.heprc.uvic.ca:5000/v2.0', 'Openstack')
+print opres
+print "----------"
+
