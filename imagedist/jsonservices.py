@@ -357,7 +357,7 @@ def deletesite(request):
         else:
             return HttpResponse(json.dumps({"Result","sites: site deleted %s"%site_id}))
         print "Must have creds"
-        return HttpResponse(json.dumps({"Result","%s has credentials still, so delete failed"%site_id}))
+        return HttpResponse(json.dumps({"Result","site credentials still exist, so delete failed"}))
     except:
         return HttpResponse(json.dumps({"Result":"Invalid Credentials Who knows"}))
     
