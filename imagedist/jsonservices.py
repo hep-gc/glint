@@ -381,9 +381,9 @@ def createsite(request):
         s=site(name=site_data['name'],url=url_str.group(0),authport=port_version_array[0],version=port_version_array[1],type=site_data['disk_format'])
         s.save()
         #print "create site complete"
-        return HttpResponse("sites: create is valid")
+        return HttpResponse({"Result":"Success"})
     except:
-        return HttpResponse("Invalid Credentials")
+        return HttpResponse({"Result":"Invalid Credentials"})
 
 def _auto_register_user(request):
     user_name=request.POST['USER_ID']
