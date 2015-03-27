@@ -375,7 +375,7 @@ def createsite(request):
         #port_version_array = re.split('/',port_vers[1])
         print "create site found found %s with %s and %s"%(url_str.group(0),port_version_array[0],port_version_array[1])
         if url_str.group(0) is None or len(port_version_array) is not 2:
-            return HttpResponse("Invalid Site Url")
+            return HttpResponse({"Result":"Site Url invalid or already in use"})
         #s=site(name=site_data['name'],url=site_data['url'],authport=site_data['port'],type=site_data['disk_format'])
         #s=site(name=site_data['name'],url=site_data['url'],authport='5000',version='v2.0',type=site_data['disk_format'])
         s=site(name=site_data['name'],url=url_str.group(0),authport=port_version_array[0],version=port_version_array[1],type=site_data['disk_format'])
