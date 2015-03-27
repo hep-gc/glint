@@ -16,3 +16,7 @@ print "List Sites"
 sites = api.listSites()
 print sites
 print "----------"
+print "Create Site"
+opres = api.createSite('Rateroni', 'http://rat01.heprc.uvic.ca:5000/v2.0', 'Openstack')
+print opres
+print "----------"
