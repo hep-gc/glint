@@ -347,7 +347,7 @@ def deletesite(request):
         
         s=site.objects.filter(pk=site_id)
         print "Filter credentials for site %s"%s
-        cred = credential.objects.filter(site=s)
+        cred = credential.objects.filter(site=s[0])
         
         if len(cred) == 0:
         #print "create site with %s"%site_data
