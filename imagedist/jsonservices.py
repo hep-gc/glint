@@ -356,6 +356,7 @@ def deletesite(request):
             #s=site.objects.filter(pk=site_id)
             print "Delete Site"
             s.delete()
+            return HttpResponse(json.dumps({"Result":"Successful Delete"}))
         else:
             return HttpResponse(json.dumps({"Result","sites: site deleted %s"%site_id}))
         
