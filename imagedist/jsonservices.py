@@ -360,7 +360,9 @@ def deletesite(request):
             return HttpResponse(json.dumps({"Result","sites: site deleted %s"%site_id}))
         
         #json.dumps(c, default=lambda o: o.__dict__)
+        print "convert py obj to dict"
         cred_dict=model_to_dict(cred)
+        print "convert py dict to json str"
         print "Must have creds %s "%cred_dict
         
         return HttpResponse(json.dumps({"Result":"site credentials still exist, so delete failed","creds":cred_dict}))
