@@ -358,7 +358,7 @@ def deletesite(request):
             return HttpResponse(json.dumps({"Result","sites: site deleted %s"%site_id}))
         
         #json.dumps(c, default=lambda o: o.__dict__)
-        cred_s=json.dumps(cred, default=lambda o: o.__dict__)
+        cred_s=json.dumps(cred.__dict__())
         print "Must have creds %s "%cred_s
         
         return HttpResponse(json.dumps({"Result":"site credentials still exist, so delete failed","creds":cred_s}))
