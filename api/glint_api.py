@@ -50,7 +50,7 @@ class glint_api(object):
         return data_obj
 
     def deleteSite(self, SITE_ID):
-        self.log.debug("delete site %s :: %s :: %s"%(SITE_ID))
+        self.log.debug("delete site %s"%(SITE_ID))
         #site_data={'site_id':SITE_ID}
         data_json = requests.post("%s/deletesite/"%self.glint_url,data={"SITE_ID":SITE_ID,"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
         self.log.debug(data_json)
