@@ -386,8 +386,8 @@ def createsite(request):
         #s=site(name=site_data['name'],url=site_data['url'],authport='5000',version='v2.0',type=site_data['disk_format'])
         s=site(name=site_data['name'],url=url_str.group(0),authport=port_version_array[0],version=port_version_array[1],type=site_data['disk_format'])
         s.save()
-        print "create site complete"
-        return HttpResponse(json.dumps({"Result":"Success"}))
+        print "create site complete with %s"%s.id
+        return HttpResponse(json.dumps({"Result":"Success","site_id":s.id}))
     except:
         return HttpResponse(json.dumps({"Result":"Invalid Credentials or Site already in Use"}))
 
