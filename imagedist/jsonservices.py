@@ -533,23 +533,23 @@ def hascredential(request):
 @csrf_exempt
 def addcredential(request):
     try:
-        #print "try to add credential"
+        print "try to add credential"
         os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         #pprint("glint recieved a valid user token for %s"%request.POST['USER_ID'])
         cred_data = eval(request.POST['CREDDATA'])
            
         usr = _auto_register_user(request)
         
-        #print "find site with %s"%cred_data['site_id']
+        print "find site with %s"%cred_data['site_id']
         ste = site.objects.filter(pk=cred_data['site_id'])
         
-        #print "add credential with %s"%cred_data
+        print "add credential with %s"%cred_data
         
         #user site and tenent need to be unique
         
         cred = credential.objects.filter(user=usr,site=ste,tenent=cred_data['tenent'])
         if len(cred) is 0:
-            #print "credentials does not exist for this user/site/tenent combo so create it"
+            print "credentials does not exist for this user/site/tenent combo so create it"
             
             cred = credential(user=usr,site=ste[0],tenent=cred_data['tenent'],un=cred_data['username'],pw=cred_data['password'])
             
