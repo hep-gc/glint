@@ -21,7 +21,7 @@ opres = api.createSite('Rateroni', 'http://rat01.heprc.uvic.ca:5000/v2.0', 'Open
 print opres
 print "----------"
 print "Delete Site"
-opres = api.deleteSite(2)
+opres = api.deleteSite(opres['site_id'])
 print opres
 print "----------"
 ########################
