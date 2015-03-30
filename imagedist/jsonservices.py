@@ -560,7 +560,7 @@ def addcredential(request):
             cred[0].pw=cred_data['password']
             cred[0].save()
         
-        return HttpResponse("sites: add credential")
+        return HttpResponse(json.dumps({"Result":"Sites: add Credential"}))
     except:
-        return HttpResponse("Invalid Credentials")
+        return HttpResponse(json.dumps({"Result":"Invalid Credentials"}))
     
