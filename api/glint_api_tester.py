@@ -31,7 +31,7 @@ opres = api.createSite('Rateroni', 'http://rat01.heprc.uvic.ca:5000/v2.0', 'Open
 print opres
 print "----------"
 print "Add Credential to %s"%opres['site_id']
-#opres = api.addCredential('HEP', 'un', 'pw',2)
+opres = api.addCredential('HEP', 'un', 'pw',opres['site_id'])
 print opres
 print "----------"
 
