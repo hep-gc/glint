@@ -38,5 +38,9 @@ print "Delete Credential to %s"%opres['site_id']
 opres = api.deleteCredential(opres['site_id'])
 print opres
 print "----------"
+print "Delete Site"
+opres = api.deleteSite(opres['site_id'])
+print opres
+print "----------"
 
 
