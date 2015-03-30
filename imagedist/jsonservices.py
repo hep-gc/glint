@@ -287,6 +287,7 @@ def save(request):
         jsonMsgObj = json.loads(jsonMsg)
         print jsonMsgObj
         if jsonMsgObj['op'] == "add_img":
+            print "Create image handler and go for it"
             img_hndlr = imagecopyhandler(request,jsonMsgObj['disk_format'],jsonMsgObj['container_format'],jsonMsgObj['image_name'],jsonMsgObj['image_dest'],jsonMsgObj['image_dest_tenent'],jsonMsgObj['img_src'][0]['site_name'],jsonMsgObj['img_src'][0]['tenent_name'])
             image_copies.append(img_hndlr)
             idx = image_copies.index(img_hndlr, )
