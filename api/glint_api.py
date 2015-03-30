@@ -51,7 +51,6 @@ class glint_api(object):
 
     def deleteSite(self, SITE_ID):
         self.log.debug("delete site %s"%(SITE_ID))
-        #site_data={'site_id':SITE_ID}
         data_json = requests.post("%s/deletesite/"%self.glint_url,data={"SITE_ID":SITE_ID,"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
         self.log.debug(data_json)
         data_obj = json.loads(data_json)
@@ -74,8 +73,12 @@ class glint_api(object):
     def hasCredential(self,USER_TOKEN, USER_TENANT, USER_ID, SITE_ID, CK_TYPE):
         return USER_TOKEN, USER_TENANT, USER_ID, SITE_ID, CK_TYPE
 
-    def addCredential(self,USER_TOKEN, USER_TENANT, CREDDATA):
-        return USER_TOKEN, USER_TENANT, CREDDATA
+    def addCredential(self, remote_tenant,remote_un,remote_pw,remote_site_id):
+        self.log.debug("add credential ")
+        data_json = requests.post("%s/addcredential/"%self.glint_url,data={"CREDDATA":{"tenent":remote_tenant,"username":remote_un,"password":remote_pw,"site_id":remote_site_id},"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
+        self.log.debug(data_json)
+        data_obj = json.loads(data_json)
+        return data_obj
     
     
     
