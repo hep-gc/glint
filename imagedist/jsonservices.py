@@ -443,12 +443,12 @@ def deletecredential(request):
         cred.delete()
         print "Cred Removed"
         
-        return HttpResponse("Success Removing Credential")
+        return HttpResponse(json.dumps({"Result":"Success removing Credential"}))
         #print "for user %s on site %s we found cred %s"%(user_id,site_id,cred)
-    except:
-        e = sys.exc_info()[0]
-        print "Exception occured removing cred %s"%e
-        return HttpResponse("Error Removing Credential")
+    except Exception as e:
+        #e = sys.exc_info()[0]
+        #print "Exception occured removing cred %s"%e
+        return HttpResponse(json.dumps({"Result":"Failure Removing Credential %s"%e}))
 
 @csrf_exempt
 def getcredential(request):

@@ -34,5 +34,9 @@ print "Add Credential to %s"%opres['site_id']
 opres = api.addCredential('HEP', 'un', 'pw',opres['site_id'])
 print opres
 print "----------"
+print "Delete Credential to %s"%opres['site_id']
+opres = api.deleteCredential(opres['site_id'])
+print opres
+print "----------"
 
 
