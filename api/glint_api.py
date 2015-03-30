@@ -75,7 +75,7 @@ class glint_api(object):
 
     def addCredential(self, remote_tenant,remote_un,remote_pw,remote_site_id):
         self.log.debug("add credential ")
-        data_json = requests.post("%s/addcredential/"%self.glint_url,data={"CREDDATA":{"tenent":remote_tenant,"username":remote_un,"password":remote_pw,"site_id":remote_site_id},"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
+        data_json = requests.post("%s/addcredential/"%self.glint_url,data={"CREDDATA":json.dumps({"tenent":remote_tenant,"username":remote_un,"password":remote_pw,"site_id":remote_site_id}),"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
         self.log.debug(data_json)
         data_obj = json.loads(data_json)
         return data_obj
