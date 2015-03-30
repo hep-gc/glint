@@ -8,14 +8,7 @@ import logging,json
 
 api = g_api.glint_api('g_log.log',logging.DEBUG,'glint_api_cfg.yaml')
 
-print "Get Images"
-images = api.getImages()
-print images
-print "----------"
-print "List Sites"
-sites = api.listSites()
-print sites
-print "----------"
+####for the easy part repository management####################
 print "Create Site"
 opres = api.createSite('Rateroni', 'http://rat01.heprc.uvic.ca:5000/v2.0', 'Openstack')
 print opres
@@ -23,8 +16,6 @@ print "----------"
 print "Delete Site"
 opres = api.deleteSite(opres['site_id'])
 print opres
-print "----------"
-########################
 print "----------"
 print "Create Site Again"
 opres = api.createSite('Rateroni', 'http://rat01.heprc.uvic.ca:5000/v2.0', 'Openstack')
@@ -71,8 +62,15 @@ opres = api.deleteSite(opres['site_id'])
 print opres
 print "----------"
 
-#now for the tough part
-
+#now for the tough part Image Distribution
+print "Get Images"
+images = api.getImages()
+print images
+print "----------"
+print "List Sites"
+sites = api.listSites()
+print sites
+print "----------"
 
 
 
