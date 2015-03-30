@@ -35,8 +35,8 @@ opres_cred = api.addCredential('HEP', 'un', 'pw',opres['site_id'])
 print opres_cred
 print "----------"
 print "Delete Credential to %s"%opres['site_id']
-opres = api.deleteCredential(opres['site_id'])
-print opres
+opres_del_cred = api.deleteCredential(opres['site_id'])
+print opres_del_cred
 print "----------"
 print "Delete Site"
 opres = api.deleteSite(opres['site_id'])
