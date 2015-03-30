@@ -59,9 +59,20 @@ opres_has_cred = api.hasCredential(opres['site_id'],"")
 print opres_has_cred
 print "----------"
 print "Test get Credential on site %s"%opres['site_id']
-opres_has_cred = api.getCredential(opres['site_id'])
-print opres_has_cred
+opres_get_cred = api.getCredential(opres['site_id'])
+print opres_get_cred
 print "----------"
+print "Delete Credential to %s"%opres['site_id']
+opres_del_cred = api.deleteCredential(opres['site_id'])
+print opres_del_cred
+print "----------"
+print "Delete Site"
+opres = api.deleteSite(opres['site_id'])
+print opres
+print "----------"
+
+#now for the tough part
+
 
 
 
