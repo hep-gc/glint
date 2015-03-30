@@ -59,14 +59,17 @@ class glint_api(object):
                     if site['name'] ==  src_site:
                         print "found source site to copy image from, now check for valid destination sites"
                         for dest_site in dest_sites:
+                            fnd_site=False
+                            
                             for avail_site in json_images['sites']:
-                                fnd_site=False
-                                
+                                print "Compare %s to dest %s"%(avail_site['name'],dest_site)    
                                 if avail_site['name'] == dest_site:
                                     fnd_site=True
-                                if not fnd_site:
-                                    print "Sorry destination site %s is not available please remove "%(avail_site)
-                                    return {"Result":"Destination site not found %s"%(avail_site)}
+                                    
+                            if not fnd_site:
+                                print "Sorry destination site %s is not available please remove "%(avail_site)
+                                return {"Result":"Destination site not found %s"%(avail_site)}
+                            
                             print "All checks passed, prepare copy json"
                             
                             
