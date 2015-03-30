@@ -285,7 +285,7 @@ def save(request):
         os_user = ksclient.Client(insecure=True,token=request.POST['USER_TOKEN'],tenant_name=request.POST['USER_TENANT'],auth_url=_auth_url)
         
         jsonMsgObj = json.loads(jsonMsg)
-       
+        print jsonMsgObj
         if jsonMsgObj['op'] == "add_img":
             img_hndlr = imagecopyhandler(request,jsonMsgObj['disk_format'],jsonMsgObj['container_format'],jsonMsgObj['image_name'],jsonMsgObj['image_dest'],jsonMsgObj['image_dest_tenent'],jsonMsgObj['img_src'][0]['site_name'],jsonMsgObj['img_src'][0]['tenent_name'])
             image_copies.append(img_hndlr)
