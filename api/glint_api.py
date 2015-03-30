@@ -44,6 +44,13 @@ class glint_api(object):
         #getImages from glint and start copy process
         json_images=self.getImages()
         #find row object with image_name in it
+        if len(dest_sites) == 0:
+            print "Please Submit list of destination sites to copy image to"
+            return {"Result":"Error, no destinatoin sites"}
+        for dest_site in dest_sites:
+            if dest_site == src_site:
+                    return {"Result":"Dest site cannot be a source site"}
+                
         for row in json_images['rows']:
             #print row
             if row['image'] == image_name:
@@ -52,13 +59,9 @@ class glint_api(object):
                     if site['name'] ==  src_site:
                         print "found source site to copy image from, now check for valid destination sites"
                         for dest_site in dest_sites:
-                            if len(dest_sites) == 0:
-                                print "Please Submit list of destination sites to copy image to"
-                                return {"Result":"Error, no destinatoin sites"}
                             for avail_site in json_images['sites']:
                                 fnd_site=False
-                                if avail_site['name'] == src_site:
-                                    return {"Result":"Dest site cannot be a source site"}
+                                
                                 if avail_site['name'] == dest_site:
                                     fnd_site=True
                                 if not fnd_site:
