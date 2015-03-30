@@ -48,7 +48,7 @@ class glint_api(object):
             #print row
             if row['image'] == image_name:
                 print "found image to copy now make sure src site exists"
-                for site in row['image']['sites']:
+                for site in row['sites']:
                     if site['name'] ==  src_site:
                         print "found source site to copy image from, now check for valid destination sites"
                         for dest_site in dest_sites:
