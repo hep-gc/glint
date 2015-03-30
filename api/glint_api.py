@@ -74,8 +74,13 @@ class glint_api(object):
     def getCredential(self,USER_TOKEN, USER_TENANT, USER_ID, SITE_ID):
         return USER_TOKEN, USER_TENANT, USER_ID, SITE_ID
 
-    def hasCredential(self,USER_TOKEN, USER_TENANT, USER_ID, SITE_ID, CK_TYPE):
-        return USER_TOKEN, USER_TENANT, USER_ID, SITE_ID, CK_TYPE
+    def hasCredential(self, site_id, ck_type):
+        #ck_type is "ONE" or "" 
+        self.log.debug("has credential ")
+        data_json = requests.post("%s/hascredential/"%self.glint_url,data={"SITE_ID":site_id,"CK_TYPE":ck_type,"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
+        self.log.debug(data_json)
+        data_obj = json.loads(data_json)
+        return data_obj
 
     def addCredential(self, remote_tenant,remote_un,remote_pw,remote_site_id):
         self.log.debug("add credential ")
