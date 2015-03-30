@@ -50,14 +50,19 @@ print "Add Credential to %s"%opres['site_id']
 opres_cred = api.addCredential('HEP', 'un', 'pw',opres['site_id'])
 print opres_cred
 print "----------"
-print "Test HAS Credential ck_type is ONE %s"%opres['site_id']
+print "Test HAS Credential ck_type is ONE  on site %s"%opres['site_id']
 opres_has_cred = api.hasCredential(opres['site_id'],"ONE")
 print opres_has_cred
 print "----------"
-print "Test HAS Credential ck_type is '' %s"%opres['site_id']
+print "Test HAS Credential ck_type is '' on site %s"%opres['site_id']
 opres_has_cred = api.hasCredential(opres['site_id'],"")
 print opres_has_cred
 print "----------"
+print "Test get Credential on site %s"%opres['site_id']
+opres_has_cred = api.getCredential(opres['site_id'])
+print opres_has_cred
+print "----------"
+
 
 
 

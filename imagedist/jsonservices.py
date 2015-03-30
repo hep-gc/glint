@@ -477,11 +477,11 @@ def getcredential(request):
             cred_obj['tenant']=cred[0].tenent
             return HttpResponse(json.dumps(cred_obj))
         else:
-            return HttpResponse("Error Getting Credential")
+            return HttpResponse(json.dumps({"Result":"Valid User Credentials, but site %s does not have your credentials for user %s"%(site_id,user_id)}))
         #else:
         #    cred = credential.objects.filter(site=site_id)
     except:
-        return HttpResponse("Error Getting Credential")
+        return HttpResponse(json.dumps({"Result":"Invalid User Credentials"}))
    
 @csrf_exempt
 def hascredential(request):

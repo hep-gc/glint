@@ -1,6 +1,7 @@
 auth_url: http://127.0.0.1:5000/v2.0
 glint_url: http://localhost:9494/image_dist
 
+#use your credentials here, these creds are just fake testing creds
 keystone_un: glinttester
 keystone_pw: bhreagh
 keystone_tenant_id: "fff30c2c8d5c4d00a149ba4bfdac0835"
