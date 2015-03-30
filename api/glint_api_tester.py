@@ -71,6 +71,10 @@ print "List Sites"
 sites = api.listSites()
 print sites
 print "----------"
+print "Image Copy"
+img_copy = api.imageCopy("Cirros 2","TestSite",["Mosue"])
+print img_copy
+print "----------"
 
 
 

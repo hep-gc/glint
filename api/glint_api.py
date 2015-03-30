@@ -37,6 +37,16 @@ class glint_api(object):
         data_obj = json.loads(data_json)
         return data_obj
 
+    def imageCopy(self,image_name,src_site=None,dest_sites):
+        self.log.debug("copy image %s from %s to %s"%(image_name,src_site,dest_sites))
+        #getImages from glint and start copy process
+        json_images=self.getImages()
+        #find row object with image_name in it
+        for row in json_images['rows']:
+            print row
+            
+        
+        
     def save(self,jsonMsg, USER_TOKEN, USER_TENANT):
         return jsonMsg, USER_TOKEN, USER_TENANT
 
