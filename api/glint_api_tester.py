@@ -65,7 +65,8 @@ print "----------"
 #now for the tough part Image Distribution
 print "Get Images"
 images = api.getImages()
-print images
+print "Got Images too long to print"
+#print images
 print "----------"
 print "List Sites"
 sites = api.listSites()
@@ -83,7 +84,7 @@ print "Image Delete Cirros 2"
 img_copy = api.imageDelete("Cirros 2","Mosue","testing")
 print img_copy
 print "----------"
-print "Image Delete"
+print "Image Delete cirros-0.3.3-x86_64"
 img_copy = api.imageDelete("cirros-0.3.3-x86_64","Mosue","testing")
 print img_copy
 print "----------"
