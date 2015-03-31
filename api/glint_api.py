@@ -42,10 +42,10 @@ class glint_api(object):
         json_images=self.getImages()
         for row in json_images['rows']:
             if row['image'] == image_name:
-                print "found image to copy now make sure src site exists"
+                #print "found image to copy now make sure src site exists"
                 for site in row['sites']:
                     if site['name'] ==  img_src_site:
-                        print "found source site to copy image from, now check for valid destination sites"
+                        #print "found source site to copy image from, now check for valid destination sites"
                         json_save_obj={"op":"rem_img","image_name":image_name,"img_src_site":img_src_site,"image_src_tenent":image_src_tenent}
                         data_json = requests.post("%s/save/"%self.glint_url,data={"jsonMsg":json.dumps(json_save_obj),"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
                         data_obj = json.loads(data_json)
@@ -59,7 +59,7 @@ class glint_api(object):
         json_images=self.getImages()
         
         if len(dest_sites) == 0:
-            print "Please Submit list of destination sites to copy image to"
+            #print "Please Submit list of destination sites to copy image to"
             return {"Result":"Error, no destinatoin sites"}
         for dest_site in dest_sites:
             if dest_site == src_site:
@@ -67,26 +67,26 @@ class glint_api(object):
                 
         for row in json_images['rows']:
             if row['image'] == image_name:
-                print "found image to copy now make sure src site exists"
+                #print "found image to copy now make sure src site exists"
                 for site in row['sites']:
                     if site['name'] ==  src_site:
-                        print "found source site to copy image from, now check for valid destination sites"
+                        #print "found source site to copy image from, now check for valid destination sites"
                         for dest_site in dest_sites:
                             fnd_site=False
                             dest_site_data=None
                             for avail_site in json_images['sites']:
-                                print "Compare %s to dest %s"%(avail_site['name'],dest_site)    
+                                #print "Compare %s to dest %s"%(avail_site['name'],dest_site)    
                                 if avail_site['name'] == dest_site:
                                     fnd_site=True
                                     dest_site_data=avail_site
                                     
                             if not fnd_site:
-                                print "Sorry destination site %s is not available please remove "%(avail_site)
+                                #print "Sorry destination site %s is not available please remove "%(avail_site)
                                 return {"Result":"Destination site not found %s"%(avail_site)}
                             
-                            print "All checks passed, prepare copy json"
+                            #print "All checks passed, prepare copy json"
                             json_save_obj={"op":"add_img","disk_format":row['disk_format'],"container_format":row['container_format'],"image_name":row['image'],"image_dest":dest_site,"image_dest_tenent":dest_site_data['tenent'],"img_src":[{"site_name":site['name'],"tenent_name":site['tenent']}]}
-                            print json_save_obj
+                            #print json_save_obj
                             data_json = requests.post("%s/save/"%self.glint_url,data={"jsonMsg":json.dumps(json_save_obj),"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
                             data_obj = json.loads(data_json)
                             return data_obj
