@@ -36,12 +36,19 @@ class glintCommands(object):
 
         # Global arguments
 
-        # used by save
-        self.parent.add_argument('--json-message',
-                             default=env('JSON_MESSAGE'),
+        # used by image copy
+        self.parent.add_argument('--image-name',
                              help='Message used for authentication with the '
-                                  'OpenStack Identity service. '
-                                  'Defaults to env[JSON_MESSAGE].')
+                                  'OpenStack Identity service. ')
+
+        self.parent.add_argument('--image-source-site',
+                             help='Message used for authentication with the '
+                                  'OpenStack Identity service. ')
+
+        self.parent.add_argument('--image-destination-site',
+                             help='Message used for authentication with the '
+                                  'OpenStack Identity service. ')
+
 
         # used by delete-site, delete-credential, get-credential, and has-credential
         self.parent.add_argument('--site-id',
@@ -74,12 +81,15 @@ class glintCommands(object):
         self.parent.add_argument('--remote-tenant',
                              help='Credential data used for authentication with the '
                                   'OpenStack Identity service. ')
+
         self.parent.add_argument('--remote-username',
                              help='Credential data used for authentication with the '
                                   'OpenStack Identity service. ')
+
         self.parent.add_argument('--remote-password',
                              help='Credential data used for authentication with the '
                                   'OpenStack Identity service. ')
+
         self.parent.add_argument('--remote-site-id',
                              help='Credential data used for authentication with the '
                                   'OpenStack Identity service. ')
@@ -91,16 +101,8 @@ class glintCommands(object):
         get_images = self.api.getImages()
         print get_images 
 
-    def save(self, args):
-        if args.json_message == '':
-            print ''
-            print 'Command "glint save" requires either varibale JSON_MESSAGE or argument --json-message'
-            print ''
-        else:
-            return self.api.save(args.json_message)
-
-
-            return images
+    def imageCopy(self, args):
+        return self.api.save(args.image_name,args.image_source_site,args.image_destination_site)
 
     def credentials(self, args):
         return self.api.credentials()
@@ -179,11 +181,11 @@ class glintCommands(object):
         parser_getImages.set_defaults(func=self.getImages)
 
         
-        # save
-        parser_save = subparser.add_parser('save',
+        # image-copy
+        parser_image_copy = subparser.add_parser('image-copy',
                                            parents=[self.parent],
                                            help='save help')
-        parser_save.set_defaults(func=self.save)
+        parser_image_copy.set_defaults(func=self.imageCopy)
 
 
         # credentials
