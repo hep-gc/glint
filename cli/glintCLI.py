@@ -1,4 +1,4 @@
-from ../api import glint_api
+from api import glint_api
 import argparse
 import logging
 import os
