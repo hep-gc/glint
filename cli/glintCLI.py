@@ -71,11 +71,18 @@ class glintCommands(object):
                                   'Defaults to env[CK_TYPE].')
 
         # used-by add-credential
-        self.parent.add_argument('--cred-data',
-                             default=env('CREDDATA'),
+        self.parent.add_argument('--remote-tenant',
                              help='Credential data used for authentication with the '
-                                  'OpenStack Identity service. '
-                                  'Defaults to env[CREDDATA].')
+                                  'OpenStack Identity service. ')
+        self.parent.add_argument('--remote-username',
+                             help='Credential data used for authentication with the '
+                                  'OpenStack Identity service. ')
+        self.parent.add_argument('--remote-password',
+                             help='Credential data used for authentication with the '
+                                  'OpenStack Identity service. ')
+        self.parent.add_argument('--remote-site-id',
+                             help='Credential data used for authentication with the '
+                                  'OpenStack Identity service. ')
          
     
     # default funtions for subcommand parsers to make calls to the glint API
@@ -145,11 +152,7 @@ class glintCommands(object):
             return self.api.hasCredential( args.site_id, args.ck_type)
 
     def addCredential(self, args):
-        if args.cred_data == '':
-            print ''
-            print 'Command "glint add-credential" requires either varibale CRED_DATA or argument --cred-data'
-            print ''
-        return self.api.addCredential(args.cred_data)
+        return self.api.addCredential(args.remote_tenant,args.remote_username,args.password,args.remote_site_id)
 
 
 
