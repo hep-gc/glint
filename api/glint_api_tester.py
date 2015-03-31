@@ -80,7 +80,7 @@ img_copy = api.imageCopy("cirros-0.3.3-x86_64","TestSite",["Mosue"])
 print img_copy
 print "----------"
 print "Image Delete"
-img_copy = api.imageDelete("Cirros 2","TestSite",["Mosue"])
+img_copy = api.imageDelete("Cirros 2","Mosue","testing")
 print img_copy
 print "----------"
 
