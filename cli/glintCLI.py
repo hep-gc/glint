@@ -120,8 +120,8 @@ class glintCommands(object):
         for site in data:
             json_obj = json.loads(site)
             list_data.append(json_obj)
-            
-        gl_view.cli_view(list_data,"list-sites")
+        print list_data
+        #gl_view.cli_view(list_data,"list-sites")
 
     def deleteSite(self, args):
         if args.site_id == '':
