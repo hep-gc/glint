@@ -2,7 +2,8 @@ from api.glint_api import glint_api
 import argparse
 import logging
 import os
-import sys
+import sys,json
+import glintViewer as gl_view
 #import warnings
 
 
@@ -102,16 +103,25 @@ class glintCommands(object):
 
     def getImages(self, args):
         get_images = self.api.getImages()
-        print get_images 
+        gl_view.cli_view(get_images,"get-images")
+        #print get_images 
 
     def imageCopy(self, args):
-        return self.api.imageCopy(args.image_name,args.image_source_site,[args.image_destination_site])
+        data = self.api.imageCopy(args.image_name,args.image_source_site,[args.image_destination_site])
+        gl_view.cli_view(data,"image-copy")
 
     def imageDelete(self, args):
-        return self.api.imageDelete(args.image_name,args.image_source_site,args.image_source_tenant)
+        data = self.api.imageDelete(args.image_name,args.image_source_site,args.image_source_tenant)
+        gl_view.cli_view(data,"image-delete")
 
     def listSites(self, args):
-        return self.api.listSites()
+        data = self.api.listSites()
+        list_data = []
+        for site in data:
+            json_obj = json.loads(site)
+            list_data.append(json_obj)
+            
+        gl_view.cli_view(list_data,"list-sites")
 
     def deleteSite(self, args):
         if args.site_id == '':
@@ -119,10 +129,12 @@ class glintCommands(object):
             print 'Command "glint delete-site" requires either varibale SITE_ID or argument --site-id'
             print ''
         else:
-            return self.api.deleteSite(args.site_id)
+            data = self.api.deleteSite(args.site_id)
+            gl_view.cli_view(data,"delete_site")
 
     def createSite(self, args):
-        return self.api.createSite(args.name,args.url,args.format)
+        data = self.api.createSite(args.name,args.url,args.format)
+        gl_view.cli_view(data,"create-site")
 
     def deleteCredential(self, args):
         if args.site_id == '':
@@ -130,7 +142,8 @@ class glintCommands(object):
             print 'Command "glint delete-credential" requires either varibale SITE_ID or argument --site-id'
             print ''
         else:
-            return self.api.deleteCredential(args.site_id)
+            data = self.api.deleteCredential(args.site_id)
+            gl_view.cli_view(data,"delete-credential")
 
     def getCredential(self, args):
         if args.site_id == '':
@@ -138,7 +151,8 @@ class glintCommands(object):
             print 'Command "glint get-credential" requires either varibale SITE_ID or argument --site-id'
             print ''
         else:
-            return self.api.getCredential(args.site_id)
+            data = self.api.getCredential(args.site_id)
+            gl_view.cli_view(data,"get-credential")
 
     def hasCredential(self, args):
         if (args.site_id  == '') and (args.ck_type == ''):
@@ -154,10 +168,12 @@ class glintCommands(object):
             print 'Command "glint has-credential" requires either varibale CK_TYPE or a    gument --ck-type'
             print ''
         else:
-            return self.api.hasCredential( args.site_id, args.ck_type)
+            data = self.api.hasCredential( args.site_id, args.ck_type)
+            gl_view.cli_view(data,"has-credential")
 
     def addCredential(self, args):
-        return self.api.addCredential(args.remote_tenant,args.remote_username,args.remote_password,args.remote_site_id)
+        data = self.api.addCredential(args.remote_tenant,args.remote_username,args.remote_password,args.remote_site_id)
+        gl_view.cli_view(data,"add-credential")
 
 
 
