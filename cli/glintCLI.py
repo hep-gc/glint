@@ -110,12 +110,7 @@ class glintCommands(object):
             return self.api.deleteSite(args.site_id)
 
     def createSite(self, args):
-        if args.site_data == '':
-            print ''
-            print 'Command "glint create-site" requires either varibale SITE_DATA or argument --site-data'
-            print ''
-        else:
-            return self.api.createSite(args.name,args.url,args.format)
+        return self.api.createSite(args.name,args.url,args.format)
 
     def deleteCredential(self, args):
         if args.site_id == '':
