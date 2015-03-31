@@ -152,7 +152,7 @@ class glintCommands(object):
             return self.api.hasCredential( args.site_id, args.ck_type)
 
     def addCredential(self, args):
-        return self.api.addCredential(args.remote_tenant,args.remote_username,args.password,args.remote_site_id)
+        return self.api.addCredential(args.remote_tenant,args.remote_username,args.remote_password,args.remote_site_id)
 
 
 
