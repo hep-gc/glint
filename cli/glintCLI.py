@@ -102,7 +102,7 @@ class glintCommands(object):
         print get_images 
 
     def imageCopy(self, args):
-        return self.api.save(args.image_name,args.image_source_site,args.image_destination_site)
+        return self.api.imageCopy(args.image_name,args.image_source_site,[args.image_destination_site])
 
     def credentials(self, args):
         return self.api.credentials()
