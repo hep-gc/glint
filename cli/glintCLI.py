@@ -60,7 +60,15 @@ class glintCommands(object):
         self.parent.add_argument('--name',
                              help='Site data used for authentication with the '
                                   'OpenStack Identity service. ')
-        
+
+        self.parent.add_argument('--url',
+                             help='Site data used for authentication with the '
+                                  'OpenStack Identity service. ')
+
+        self.parent.add_argument('--format',
+                             help='Site data used for authentication with the '
+                                  'OpenStack Identity service. ')
+
         # used by has-credential
         self.parent.add_argument('--ck-type',
                              default=env('CK_TYPE'),
@@ -113,7 +121,7 @@ class glintCommands(object):
             print 'Command "glint create-site" requires either varibale SITE_DATA or argument --site-data'
             print ''
         else:
-            return self.api.createSite(args.site_data)
+            return self.api.createSite(args.name,args.url,args.format)
 
     def deleteCredential(self, args):
         if args.site_id == '':
