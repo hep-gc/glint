@@ -88,7 +88,10 @@ print "Image Delete cirros-0.3.3-x86_64"
 img_copy = api.imageDelete("cirros-0.3.3-x86_64","Mosue","testing")
 print img_copy
 print "----------"
-
+print "Image Copy tinyvm"
+img_copy = api.imageCopy("tinyvm","Mosue",["TestSite"])
+print img_copy
+print "----------"
 
 
 
