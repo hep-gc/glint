@@ -36,7 +36,7 @@ class glintCommands(object):
 
         # Global arguments
 
-        # used by image copy
+        # used by image copy and image delete
         self.parent.add_argument('--image-name',
                              help='Message used for authentication with the '
                                   'OpenStack Identity service. ')
@@ -46,6 +46,9 @@ class glintCommands(object):
                                   'OpenStack Identity service. ')
 
         self.parent.add_argument('--image-destination-site',
+                             help='Message used for authentication with the '
+                                  'OpenStack Identity service. ')
+        self.parent.add_argument('--image-source-tenant',
                              help='Message used for authentication with the '
                                   'OpenStack Identity service. ')
 
@@ -104,8 +107,8 @@ class glintCommands(object):
     def imageCopy(self, args):
         return self.api.imageCopy(args.image_name,args.image_source_site,[args.image_destination_site])
 
-    def credentials(self, args):
-        return self.api.credentials()
+    def imageDelete(self, args):
+        return self.api.imageDelete(args.image_name,args.image_source_site,args.image_source_tenant)
 
     def listSites(self, args):
         return self.api.listSites()
@@ -188,11 +191,11 @@ class glintCommands(object):
         parser_image_copy.set_defaults(func=self.imageCopy)
 
 
-        # credentials
-        parser_credentials = subparser.add_parser('credentials',
+        # image-delete
+        parser_image_delete = subparser.add_parser('image-delete',
                                                  parents=[self.parent],
-                                                 help='credentials help')
-        parser_credentials.set_defaults(func=self.credentials)
+                                                 help='image-delete help')
+        parser_image_delete.set_defaults(func=self.imageDelete)
 
 
 
