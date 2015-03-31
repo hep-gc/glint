@@ -57,6 +57,10 @@ class glintCommands(object):
                                   'OpenStack Identity service. '
                                   'Defaults to env[SITEDATA].')
 
+        self.parent.add_argument('--name',
+                             help='Site data used for authentication with the '
+                                  'OpenStack Identity service. ')
+        
         # used by has-credential
         self.parent.add_argument('--ck-type',
                              default=env('CK_TYPE'),
