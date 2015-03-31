@@ -96,11 +96,11 @@ class glint_api(object):
             
         
         
-    def save(self,jsonMsg, USER_TOKEN, USER_TENANT):
-        return jsonMsg, USER_TOKEN, USER_TENANT
+    #def save(self,jsonMsg, USER_TOKEN, USER_TENANT):
+    #    return jsonMsg, USER_TOKEN, USER_TENANT
 
-    def credentials(self,USER_TOKEN, USER_TENANT, USER_ID):
-        return USER_TOKEN, USER_TENANT, USER_ID
+    #def credentials(self,USER_TOKEN, USER_TENANT, USER_ID):
+    #    return USER_TOKEN, USER_TENANT, USER_ID
 
     def listSites(self):
         self.log.debug("getImages  from %s"%( "%s/listsites/"%self.glint_url))
