@@ -76,7 +76,7 @@ class glintCommands(object):
 
     def getImages(self, args):
         get_images = self.api.getImages()
-        
+        print get_images 
 
     def save(self, args):
         if args.json_message == '':
