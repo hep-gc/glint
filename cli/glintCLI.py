@@ -51,12 +51,6 @@ class glintCommands(object):
                                   'Defaults to env[SITE_ID].')
 
         # used by create-site
-        self.parent.add_argument('--site-data',
-                             default=env('SITEDATA'),
-                             help='Site data used for authentication with the '
-                                  'OpenStack Identity service. '
-                                  'Defaults to env[SITEDATA].')
-
         self.parent.add_argument('--name',
                              help='Site data used for authentication with the '
                                   'OpenStack Identity service. ')
