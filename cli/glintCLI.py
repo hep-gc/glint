@@ -132,7 +132,7 @@ class glintCommands(object):
             print ''
         else:
             data = self.api.deleteSite(args.site_id)
-            gl_view.cli_view([data],"delete_site")
+            gl_view.cli_view([data],"delete-site")
             #print data
 
     def createSite(self, args):
