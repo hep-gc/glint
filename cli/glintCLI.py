@@ -108,12 +108,12 @@ class glintCommands(object):
 
     def imageCopy(self, args):
         data = self.api.imageCopy(args.image_name,args.image_source_site,[args.image_destination_site])
-        gl_view.cli_view(data,"image-copy")
+        gl_view.cli_view([data],"image-copy")
         #print data
 
     def imageDelete(self, args):
         data = self.api.imageDelete(args.image_name,args.image_source_site,args.image_source_tenant)
-        gl_view.cli_view(data,"image-delete")
+        gl_view.cli_view([data],"image-delete")
         #print data
 
     def listSites(self, args):
@@ -132,12 +132,12 @@ class glintCommands(object):
             print ''
         else:
             data = self.api.deleteSite(args.site_id)
-            gl_view.cli_view(data,"delete_site")
+            gl_view.cli_view([data],"delete_site")
             #print data
 
     def createSite(self, args):
         data = self.api.createSite(args.name,args.url,args.format)
-        gl_view.cli_view(data,"create-site")
+        gl_view.cli_view([data],"create-site")
         #print data
 
     def deleteCredential(self, args):
@@ -147,7 +147,7 @@ class glintCommands(object):
             print ''
         else:
             data = self.api.deleteCredential(args.site_id)
-            gl_view.cli_view(data,"delete-credential")
+            gl_view.cli_view([data],"delete-credential")
             #print data
 
     def getCredential(self, args):
@@ -157,7 +157,7 @@ class glintCommands(object):
             print ''
         else:
             data = self.api.getCredential(args.site_id)
-            gl_view.cli_view(data,"get-credential")
+            gl_view.cli_view([data],"get-credential")
             #print data
 
     def hasCredential(self, args):
@@ -175,12 +175,12 @@ class glintCommands(object):
             print ''
         else:
             data = self.api.hasCredential( args.site_id, args.ck_type)
-            gl_view.cli_view(data,"has-credential")
+            gl_view.cli_view([data],"has-credential")
             #print data
 
     def addCredential(self, args):
         data = self.api.addCredential(args.remote_tenant,args.remote_username,args.remote_password,args.remote_site_id)
-        gl_view.cli_view(data,"add-credential")
+        gl_view.cli_view([data],"add-credential")
         #print data
 
 
