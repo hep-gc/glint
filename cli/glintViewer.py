@@ -3,7 +3,7 @@ import os, sys
 import cli_factory_utils as fact_utils
 
 def cli_view(json,cmd):
-    print "View the Json %s with command %s"%(json,cmd)
+    #print "View the Json %s with command %s"%(json,cmd)
     #get titles
     headers = fact_utils.get_titles(cmd)
     #print headers
