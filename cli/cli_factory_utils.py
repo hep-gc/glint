@@ -9,10 +9,9 @@ titles = {
           "delete-site":[{"header":"Result of Operation","key":"Result"}],
           "delete-credential":[{"header":"Result of Operation","key":"Result"}],
           "add-credential":[{"header":"Result of Operation","key":"Result"}],
-          "has-credentials":[{"header":"Result of Operation","key":"result"}],
+          "has-credential":[{"header":"Result of Operation","key":"result"}],
           "create-site":[{"header":"Result of Operation","key":"Result"},{"header":"site id","key":"site_id"}],
           "get-credential":[{"header":"Credential id","key":"cred_id"},{"header":"Tenant Name","key":"tenant"}],
-          "has-credential":[{"header":"Image Operation Thread id","key":"thread_id"}],
           "image-copy":[{"header":"Image Operation Thread id","key":"thread_id"}],
           "image-delete":[{"header":"Image Operation Thread id","key":"thread_id"}],
           "get-image":[{"header":"","key":"image"}]
