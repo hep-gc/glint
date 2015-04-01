@@ -6,13 +6,18 @@ Created on Mar 31, 2015
 
 titles = {
           "list-sites":[{"header":"Site Name","key":"name"},{"header":"Site URL","key":"url"},{"header":"Cloud Type","key":"type"}],
-          "basic-result":[{"header":"Result of Operation","key":"Result"}],
-          "basic-result-creds":[{"header":"Result of Operation","key":"result"}],
-          "create-site-result":[{"header":"Result of Operation","key":"Result"},{"header":"site id","key":"site_id"}],
+          "delete-site":[{"header":"Result of Operation","key":"Result"}],
+          "delete-credential":[{"header":"Result of Operation","key":"Result"}],
+          "add-credential":[{"header":"Result of Operation","key":"Result"}],
+          "has-credentials":[{"header":"Result of Operation","key":"result"}],
+          "create-site":[{"header":"Result of Operation","key":"Result"},{"header":"site id","key":"site_id"}],
           "get-credential":[{"header":"Credential id","key":"cred_id"},{"header":"Tenant Name","key":"tenant"}],
-          "image-operation":[{"header":"Image Operation Thread id","key":"thread_id"}],
+          "has-credential":[{"header":"Image Operation Thread id","key":"thread_id"}],
+          "image-copy":[{"header":"Image Operation Thread id","key":"thread_id"}],
+          "image-delete":[{"header":"Image Operation Thread id","key":"thread_id"}],
           "get-image":[{"header":"","key":"image"}]
           }
+
 
 def get_titles(cmd):
     return titles[cmd]
