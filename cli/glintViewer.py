@@ -11,8 +11,8 @@ def cli_view(json,cmd):
         col_sizes = fact_utils.get_image_max_column_sizes(json,headers)
     else:
         col_sizes = fact_utils.get_max_column_sizes(json,headers)
-    print headers
-    print col_sizes
+    #print headers
+    #print col_sizes
     if "%s"%cmd in "get-images":
         prettyPrintGetImages(json,headers,col_sizes)
     else:
