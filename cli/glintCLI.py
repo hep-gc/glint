@@ -103,7 +103,7 @@ class glintCommands(object):
 
     def getImages(self, args):
         data = self.api.getImages()
-        gl_view.cli_view(get_images,"get-images")
+        gl_view.cli_view(data,"get-images")
         #print data 
 
     def imageCopy(self, args):
