@@ -5,7 +5,7 @@ def cli_view(json,cmd):
     #get titles
     headers = fact_utils.get_titles(cmd)
     #print headers
-    if "%s"%cmd in "get-image":
+    if "%s"%cmd in "get-images":
         col_sizes = fact_utils.get_image_max_column_sizes(json,headers)
     else:
         col_sizes = fact_utils.get_max_column_sizes(json,headers) 

@@ -14,7 +14,7 @@ titles = {
           "get-credential":[{"header":"Credential id","key":"cred_id"},{"header":"Tenant Name","key":"tenant"}],
           "image-copy":[{"header":"Image Operation Thread id","key":"thread_id"}],
           "image-delete":[{"header":"Image Operation Thread id","key":"thread_id"}],
-          "get-image":[{"header":"","key":"image"}]
+          "get-images":[{"header":"","key":"image"}]
           }
 
 
