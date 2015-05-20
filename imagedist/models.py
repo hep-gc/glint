@@ -18,7 +18,7 @@ class site(models.Model):
 
 class user(models.Model):
     username = models.CharField(max_length=200)
-    tenent   = models.CharField(max_length=200)
+    tenant   = models.CharField(max_length=200)
     token    = models.CharField(max_length=200)
     lastlogin = models.DateTimeField()
     
@@ -30,7 +30,7 @@ class credential(models.Model):
     site = models.ForeignKey(site)
     un = models.CharField(max_length=200)
     pw = models.CharField(max_length=200)
-    tenent = models.CharField(max_length=200)
+    tenant = models.CharField(max_length=200)
     
     def __str__(self):
         return self.un
@@ -43,7 +43,7 @@ class image(models.Model):
     
     type = models.CharField(max_length=200,choices=IMAGETYPES,default=QEMU_QCOW2)
     location = models.ForeignKey(site)
-    tenent = models.CharField(max_length=200)
+    tenant = models.CharField(max_length=200)
         
     def __str__(self):
         return self.name
