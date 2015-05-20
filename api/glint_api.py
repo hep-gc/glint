@@ -37,8 +37,8 @@ class glint_api(object):
         data_obj = json.loads(data_json)
         return data_obj
 
-    def imageDelete(self,image_name,img_src_site,image_src_tenent):
-        self.log.debug("delete image %s from %s tenant %s"%(image_name,img_src_site,image_src_tenent))
+    def imageDelete(self,image_name,img_src_site,image_src_tenant):
+        self.log.debug("delete image %s from %s tenant %s"%(image_name,img_src_site,image_src_tenant))
         json_images=self.getImages()
         for row in json_images['rows']:
             if row['image'] == image_name:
@@ -46,7 +46,7 @@ class glint_api(object):
                 for site in row['sites']:
                     if site['name'] ==  img_src_site:
                         #print "found source site to copy image from, now check for valid destination sites"
-                        json_save_obj={"op":"rem_img","image_name":image_name,"img_src_site":img_src_site,"image_src_tenent":image_src_tenent}
+                        json_save_obj={"op":"rem_img","image_name":image_name,"img_src_site":img_src_site,"image_src_tenant":image_src_tenant}
                         data_json = requests.post("%s/save/"%self.glint_url,data={"jsonMsg":json.dumps(json_save_obj),"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
                         data_obj = json.loads(data_json)
                         return data_obj
@@ -85,7 +85,7 @@ class glint_api(object):
                                 return {"Result":"Destination site not found %s"%(avail_site)}
                             
                             #print "All checks passed, prepare copy json"
-                            json_save_obj={"op":"add_img","disk_format":row['disk_format'],"container_format":row['container_format'],"image_name":row['image'],"image_dest":dest_site,"image_dest_tenent":dest_site_data['tenent'],"img_src":[{"site_name":site['name'],"tenent_name":site['tenent']}]}
+                            json_save_obj={"op":"add_img","disk_format":row['disk_format'],"container_format":row['container_format'],"image_name":row['image'],"image_dest":dest_site,"image_dest_tenant":dest_site_data['tenant'],"img_src":[{"site_name":site['name'],"tenant_name":site['tenant']}]}
                             #print json_save_obj
                             data_json = requests.post("%s/save/"%self.glint_url,data={"jsonMsg":json.dumps(json_save_obj),"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
                             data_obj = json.loads(data_json)
@@ -147,7 +147,7 @@ class glint_api(object):
 
     def addCredential(self, remote_tenant,remote_un,remote_pw,remote_site_id):
         self.log.debug("add credential ")
-        data_json = requests.post("%s/addcredential/"%self.glint_url,data={"CREDDATA":json.dumps({"tenent":remote_tenant,"username":remote_un,"password":remote_pw,"site_id":remote_site_id}),"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
+        data_json = requests.post("%s/addcredential/"%self.glint_url,data={"CREDDATA":json.dumps({"tenant":remote_tenant,"username":remote_un,"password":remote_pw,"site_id":remote_site_id}),"USER_ID":self.un,"USER_TOKEN":"%s"%self.token,"USER_TENANT":self.tenant_name},cookies=None).text  
         self.log.debug(data_json)
         data_obj = json.loads(data_json)
         return data_obj

@@ -46,7 +46,7 @@ def getImages(request):
         json_msg = {}
         rows = []
         sites = []
-        sites.append({"name":"%s"%(_root_site),"tenent":"%s"%(request.POST['USER_TENANT'])})
+        sites.append({"name":"%s"%(_root_site),"tenant":"%s"%(request.POST['USER_TENANT'])})
         for index,image in enumerate(images):
             #print "found Image locally %s"%image
             img_obj = {}
@@ -55,9 +55,9 @@ def getImages(request):
             img_obj['container_format']=image.container_format
             site_list = []
             if image.owner == keystone.auth_tenant_id:
-                site_list.append({"name":"%s"%(_root_site),"tenent":"%s"%(request.POST['USER_TENANT']),"is_public":"%s"%image.is_public,"is_owner":"True"})
+                site_list.append({"name":"%s"%(_root_site),"tenant":"%s"%(request.POST['USER_TENANT']),"is_public":"%s"%image.is_public,"is_owner":"True"})
             else:
-                site_list.append({"name":"%s"%(_root_site),"tenent":"%s"%(request.POST['USER_TENANT']),"is_public":"%s"%image.is_public,"is_owner":"False"})
+                site_list.append({"name":"%s"%(_root_site),"tenant":"%s"%(request.POST['USER_TENANT']),"is_public":"%s"%image.is_public,"is_owner":"False"})
             img_obj['sites']=site_list
             rows.append(img_obj)
         
@@ -65,11 +65,11 @@ def getImages(request):
         creds=credential.objects.filter(user=usr)
         for cred in creds:
             try:
-                #print "Try to Create Keystone Client using un:%s pw:%s ten:%s auth_url: %s:%s/v2.0"%(cred.un,cred.pw,cred.tenent,cred.site.url,cred.site.authport)
-                _keystone_ = ksclient.Client(insecure=True,username=cred.un,password=cred.pw,tenant_name=cred.tenent,auth_url="%s:%s/%s"%(cred.site.url,cred.site.authport,cred.site.version))
+                #print "Try to Create Keystone Client using un:%s pw:%s ten:%s auth_url: %s:%s/v2.0"%(cred.un,cred.pw,cred.tenant,cred.site.url,cred.site.authport)
+                _keystone_ = ksclient.Client(insecure=True,username=cred.un,password=cred.pw,tenant_name=cred.tenant,auth_url="%s:%s/%s"%(cred.site.url,cred.site.authport,cred.site.version))
                 #print "Success"
                 images = _get_images(_keystone_)
-                sites.append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent)})
+                sites.append({"name":"%s"%(cred.site.name),"tenant":"%s"%(cred.tenant)})
                 for index,image in enumerate(images):
                     #print "found %s"%image.name
                     inserted=False
@@ -77,9 +77,9 @@ def getImages(request):
                         #print "In rows found image %s"%row['image']
                         if row['image'] == image.name:
                             if image.owner == _keystone_.auth_tenant_id:
-                                row['sites'].append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent),"is_public":"%s"%image.is_public,"is_owner":"True"})
+                                row['sites'].append({"name":"%s"%(cred.site.name),"tenant":"%s"%(cred.tenant),"is_public":"%s"%image.is_public,"is_owner":"True"})
                             else:
-                                row['sites'].append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent),"is_public":"%s"%image.is_public,"is_owner":"False"})
+                                row['sites'].append({"name":"%s"%(cred.site.name),"tenant":"%s"%(cred.tenant),"is_public":"%s"%image.is_public,"is_owner":"False"})
                             inserted=True
                         
                     if not inserted:
@@ -90,9 +90,9 @@ def getImages(request):
                         img_obj['container_format']=image.container_format
                         site_list = []
                         if image.owner == _keystone_.auth_tenant_id:
-                            site_list.append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent),"is_public":"%s"%image.is_public,"is_owner":"True"})
+                            site_list.append({"name":"%s"%(cred.site.name),"tenant":"%s"%(cred.tenant),"is_public":"%s"%image.is_public,"is_owner":"True"})
                         else:
-                            site_list.append({"name":"%s"%(cred.site.name),"tenent":"%s"%(cred.tenent),"is_public":"%s"%image.is_public,"is_owner":"False"})
+                            site_list.append({"name":"%s"%(cred.site.name),"tenant":"%s"%(cred.tenant),"is_public":"%s"%image.is_public,"is_owner":"False"})
                         img_obj['sites']=site_list
                         rows.append(img_obj)
             except Exception as e:
@@ -118,12 +118,12 @@ class imageremovehandler():
     jsonMsgObj=''
     status="incomplete"
     local_user=''
-    local_tenent=''
+    local_tenant=''
     
     def __init__(self,request,jsonMsgObj):
         self.jsonMsgObj=jsonMsgObj
         self.local_user=request.POST['USER_ID']
-        self.local_tenent=request.POST['USER_TENANT']
+        self.local_tenant=request.POST['USER_TENANT']
      
     def getstatus(self):
         return self.status   
@@ -143,11 +143,11 @@ class imageremovehandler():
                 return
             else:
                 src_site_name = site.objects.filter(name=self.jsonMsgObj['img_src_site'])
-                user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
+                user_name = user.objects.filter(username=self.local_user,tenant=self.local_tenant)
                 print "now generate credentials"
-                cred = credential.objects.filter(user=user_name,site=src_site_name,tenent=self.jsonMsgObj['image_src_tenent'])
+                cred = credential.objects.filter(user=user_name,site=src_site_name,tenant=self.jsonMsgObj['image_src_tenant'])
                 print "now get keystoe client"
-                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(src_site_name[0].url,src_site_name[0].authport,src_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(src_site_name[0].url,src_site_name[0].authport,src_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenant)
             print "now create service ep"
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_src = savi_fix(keystone_src,glance_ep_src)
@@ -173,27 +173,27 @@ class imagecopyhandler():
     disk_format=''
     container_format=''
     source_site=''
-    source_tenent=''
+    source_tenant=''
     remote_site=''
-    remote_tenent=''
+    remote_tenant=''
     count=0
     copy_from_root=False
     local_user=''
     user_token=''
-    local_tenent=''
+    local_tenant=''
     
     
-    def __init__(self,request,diskformat,containerformat,imagename,remotesite,remotetenent,sourcesite,sourcetenent):
+    def __init__(self,request,diskformat,containerformat,imagename,remotesite,remotetenant,sourcesite,sourcetenant):
         self.container_format=containerformat
         self.disk_format=diskformat
         self.img_name=imagename
         self.remote_site=remotesite
         self.source_site=sourcesite
-        self.remote_tenent=remotetenent
-        self.source_tenent=sourcetenent
+        self.remote_tenant=remotetenant
+        self.source_tenant=sourcetenant
         self.local_user=request.POST['USER_ID']
         self.user_token=request.POST['USER_TOKEN']
-        self.local_tenent=request.POST['USER_TENANT']
+        self.local_tenant=request.POST['USER_TENANT']
         if sourcesite == _root_site:
             self.copy_from_root=True
         else:
@@ -209,22 +209,22 @@ class imagecopyhandler():
         self.thread.start()
     
     def transfer_image(self,imageName,remoteSite,sourceSite):
-        print "start image transfer %s from %s:%s to %s:%s"%(self.img_name,self.source_site,self.source_tenent,self.remote_site,self.remote_tenent)   
+        print "start image transfer %s from %s:%s to %s:%s"%(self.img_name,self.source_site,self.source_tenant,self.remote_site,self.remote_tenant)   
         directory=''
         
         try:
             keystone_src=''
             if self.source_site ==_root_site:
                 #print "copy from Rat is source"
-                keystone_src = ksclient.Client(insecure=True,token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
+                keystone_src = ksclient.Client(insecure=True,token=self.user_token,tenant_name=self.local_tenant,auth_url=_auth_url)
             else:
                 src_site_name = site.objects.filter(name=self.source_site)
-                user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
+                user_name = user.objects.filter(username=self.local_user,tenant=self.local_tenant)
                 
-                cred = credential.objects.filter(user=user_name,site=src_site_name,tenent=self.source_tenent)
+                cred = credential.objects.filter(user=user_name,site=src_site_name,tenant=self.source_tenant)
                 print "copy from other %s:%s/%s"%(src_site_name[0].url,src_site_name[0].authport,src_site_name[0].version)
-                print "using creds %s:%s,%s"%(cred[0].un,cred[0].pw,cred[0].tenent)
-                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(src_site_name[0].url,src_site_name[0].authport,src_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                print "using creds %s:%s,%s"%(cred[0].un,cred[0].pw,cred[0].tenant)
+                keystone_src = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(src_site_name[0].url,src_site_name[0].authport,src_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenant)
             
             glance_ep_src = keystone_src.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_src = savi_fix(keystone_src,glance_ep_src) 
@@ -238,7 +238,7 @@ class imagecopyhandler():
                 
             image_src = glance_src.images.get(img_id)
             img_data = glance_src.images.data(image_src,True)
-            directory = "/home/rd/imgcopytmp/%s/%s_%s/"%(img_id,self.remote_site,self.remote_tenent)
+            directory = "/home/rd/imgcopytmp/%s/%s_%s/"%(img_id,self.remote_site,self.remote_tenant)
             touch(directory)
             with open('%s/%s'%(directory,self.img_name),'wb') as f:
                 for data_chunk in img_data:
@@ -254,13 +254,13 @@ class imagecopyhandler():
             keystone_dest=''
             if self.remote_site ==_root_site:
                 print "copy to Rat is dest"
-                keystone_dest = ksclient.Client(insecure=True,token=self.user_token,tenant_name=self.local_tenent,auth_url=_auth_url)
+                keystone_dest = ksclient.Client(insecure=True,token=self.user_token,tenant_name=self.local_tenant,auth_url=_auth_url)
             else:
                 remote_site_name = site.objects.filter(name=self.remote_site)
-                user_name = user.objects.filter(username=self.local_user,tenent=self.local_tenent)
+                user_name = user.objects.filter(username=self.local_user,tenant=self.local_tenant)
                 
-                cred = credential.objects.filter(user=user_name,site=remote_site_name,tenent=self.remote_tenent)
-                keystone_dest = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(remote_site_name[0].url,remote_site_name[0].authport,remote_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenent)
+                cred = credential.objects.filter(user=user_name,site=remote_site_name,tenant=self.remote_tenant)
+                keystone_dest = ksclient.Client(insecure=True,auth_url="%s:%s/%s"%(remote_site_name[0].url,remote_site_name[0].authport,remote_site_name[0].version),username=cred[0].un,password=cred[0].pw,tenant_name=cred[0].tenant)
                 
             glance_ep_dest = keystone_dest.service_catalog.url_for(service_type='image',endpoint_type='publicURL')
             glance_ep_dest = savi_fix(keystone_dest,glance_ep_dest)
@@ -268,7 +268,7 @@ class imagecopyhandler():
             
             file_loc='%s%s'%(directory,self.img_name)
             fimage = open(file_loc)
-            glance_dest.images.create(name=self.img_name,is_public="False",disk_format=self.disk_format,container_format=self.container_format,owner=self.remote_tenent,data=fimage)
+            glance_dest.images.create(name=self.img_name,is_public="False",disk_format=self.disk_format,container_format=self.container_format,owner=self.remote_tenant,data=fimage)
             
             print "done update with data upload"
             
@@ -288,7 +288,7 @@ def save(request):
         print jsonMsgObj
         if jsonMsgObj['op'] == "add_img":
             print "Create image handler and go for it"
-            img_hndlr = imagecopyhandler(request,jsonMsgObj['disk_format'],jsonMsgObj['container_format'],jsonMsgObj['image_name'],jsonMsgObj['image_dest'],jsonMsgObj['image_dest_tenent'],jsonMsgObj['img_src'][0]['site_name'],jsonMsgObj['img_src'][0]['tenent_name'])
+            img_hndlr = imagecopyhandler(request,jsonMsgObj['disk_format'],jsonMsgObj['container_format'],jsonMsgObj['image_name'],jsonMsgObj['image_dest'],jsonMsgObj['image_dest_tenant'],jsonMsgObj['img_src'][0]['site_name'],jsonMsgObj['img_src'][0]['tenant_name'])
             image_copies.append(img_hndlr)
             idx = image_copies.index(img_hndlr, )
             print "k add image now and return thread id %s"%idx
@@ -406,11 +406,11 @@ def _auto_register_user(request):
     user_name=request.POST['USER_ID']
     token=request.POST['USER_TOKEN']
     tenant_name=request.POST['USER_TENANT']
-    usr = user.objects.filter(username=user_name,tenent=tenant_name)
+    usr = user.objects.filter(username=user_name,tenant=tenant_name)
     print "found %s"%usr
     if len(usr) is 0:
         print "User not seen before adding entry to db"
-        usr = user(username=user_name,tenent=tenant_name,token=token,lastlogin=datetime.datetime.now())
+        usr = user(username=user_name,tenant=tenant_name,token=token,lastlogin=datetime.datetime.now())
         usr.save()
         return usr
     else:
@@ -433,7 +433,7 @@ def deletecredential(request):
         #ck_type = request.POST['CK_TYPE']
         print "have un: %s and site id :%s "%(user_name,site_id)
         
-        usr = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
+        usr = user.objects.filter(username=user_name,tenant=request.POST['USER_TENANT'])
         #print "need to get past this %s"%usr
         user_id = usr[0].pk
         #user_id = user_obj[0].pk
@@ -462,7 +462,7 @@ def getcredential(request):
         #ck_type = request.POST['CK_TYPE']
         #print "have un: %s and site id :%s "%(user_name,site_id)
         
-        usr = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
+        usr = user.objects.filter(username=user_name,tenant=request.POST['USER_TENANT'])
         #print "need to get past this %s"%usr
         user_id = usr[0].pk
         #user_id = user_obj[0].pk
@@ -475,7 +475,7 @@ def getcredential(request):
             #print "Found Credential Return as Json obj %s"%cred
             cred_obj={}
             cred_obj['cred_id']=cred[0].un
-            cred_obj['tenant']=cred[0].tenent
+            cred_obj['tenant']=cred[0].tenant
             return HttpResponse(json.dumps(cred_obj))
         else:
             return HttpResponse(json.dumps({"Result":"Valid User Credentials, but site %s does not have your credentials for user %s"%(site_id,user_id)}))
@@ -495,7 +495,7 @@ def hascredential(request):
         ck_type = request.POST['CK_TYPE']
         #print "have un: %s and site id :%s "%(user_name,site_id)
         
-        usr = user.objects.filter(username=user_name,tenent=request.POST['USER_TENANT'])
+        usr = user.objects.filter(username=user_name,tenant=request.POST['USER_TENANT'])
         #print "need to get past this %s"%usr
         user_id = usr[0].pk
         #user_id = user_obj[0].pk
@@ -547,17 +547,17 @@ def addcredential(request):
         
         print "add credential with %s"%cred_data
         
-        #user site and tenent need to be unique
+        #user site and tenant need to be unique
         
-        cred = credential.objects.filter(user=usr,site=ste,tenent=cred_data['tenent'])
+        cred = credential.objects.filter(user=usr,site=ste,tenant=cred_data['tenant'])
         if len(cred) is 0:
-            print "credentials does not exist for this user/site/tenent combo so create it"
+            print "credentials does not exist for this user/site/tenant combo so create it"
             
-            cred = credential(user=usr,site=ste[0],tenent=cred_data['tenent'],un=cred_data['username'],pw=cred_data['password'])
+            cred = credential(user=usr,site=ste[0],tenant=cred_data['tenant'],un=cred_data['username'],pw=cred_data['password'])
             
             cred.save()
         else:
-            print "credentials exists for this user/site/tenent combo, assume an update"
+            print "credentials exists for this user/site/tenant combo, assume an update"
             cred[0].un=cred_data['username']
             cred[0].pw=cred_data['password']
             cred[0].save()
